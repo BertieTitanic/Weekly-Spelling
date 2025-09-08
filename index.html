@@ -2,105 +2,274 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Responsive Keyboard</title>
+  <title>Spelling Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: sans-serif;
-      text-align: center;
-      margin: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #f0f4f8;
+      color: #333;
     }
-
-    .keyboard-container {
+    h1 {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    .sentence {
+      font-size: 1.2em;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .typed-word {
+      font-size: 1.4em;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+    .keyboard {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      margin-top: 20px;
+      gap: 8px;
+      margin-bottom: 20px;
     }
-
     .keyboard-row {
       display: flex;
+      justify-content: center;
       gap: 6px;
+      flex-wrap: wrap;
+      max-width: 100%;
     }
-
     .keyboard-row button {
-      padding: 12px;
-      font-size: 1.1em;
+      padding: 10px;
+      font-size: 1em;
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: 42px;
+      width: 36px;
     }
-
+    .keyboard-row button:hover {
+      background: #005fa3;
+    }
     @media (max-width: 500px) {
       .keyboard-row button {
-        width: 30px;
+        width: 28px;
         font-size: 0.9em;
-        padding: 10px;
+        padding: 8px;
       }
     }
-
-    @media (min-width: 501px) {
-      .keyboard-container {
-        display: none;
-      }
+    .controls {
+      text-align: center;
     }
-
-    #output {
+    .controls button {
+      padding: 12px;
+      font-size: 1em;
+      background: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .score {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .summary {
       margin-top: 20px;
-      font-size: 1.5em;
-      min-height: 40px;
+      font-size: 1em;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <h1>Virtual Keyboard</h1>
-  <div id="output"></div>
+<h1>Spelling Challenge</h1>
+<div class="sentence" id="sentenceDisplay"></div>
+<div class="typed-word" id="typedWordDisplay">_ _ _ _ _</div>
 
-  <div class="keyboard-container">
-    <div class="keyboard-row">
-      <button>A</button><button>B</button><button>C</button><button>D</button><button>E</button>
-      <button>F</button><button>G</button><button>H</button><button>I</button><button>J</button>
-    </div>
-    <div class="keyboard-row">
-      <button>K</button><button>L</button><button>M</button><button>N</button><button>O</button>
-      <button>P</button><button>Q</button><button>R</button><button>S</button><button>T</button>
-    </div>
-    <div class="keyboard-row">
-      <button>U</button><button>V</button><button>W</button><button>X</button><button>Y</button>
-      <button>Z</button>
-    </div>
-  </div>
+<div class="keyboard" id="keyboard"></div>
 
-  <script>
-    const output = document.getElementById('output');
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+<div class="controls">
+  <button onclick="checkAnswer()">Check Answer</button>
+  <button onclick="backspace()">Backspace</button>
+</div>
 
-    function handleKeyPress(key) {
-      output.textContent += key;
-    }
+<div class="feedback" id="feedback"></div>
+<div class="score" id="score">Score: 0</div>
+<button id="retryButton" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
+<div class="summary" id="summary"></div>
 
-    // Handle on-screen button clicks
-    document.querySelectorAll('.keyboard-row button').forEach(button => {
-      button.addEventListener('click', () => {
-        handleKeyPress(button.textContent);
-      });
+<script>
+const allWords = [
+  { word: "caught", sentence: "A boy ________ a ball." },
+  { word: "naughty", sentence: "The ________ puppy chewed the shoes." },
+  { word: "taught", sentence: "She ________ me how to swim." },
+  { word: "daughter", sentence: "His ________ loves painting." },
+  { word: "autumn", sentence: "Leaves fall in ________." },
+  { word: "clause", sentence: "The contract has a special ________." },
+  { word: "cause", sentence: "We donated to a good ________." },
+  { word: "astronaut", sentence: "The ________ floated in space." },
+  { word: "applaud", sentence: "We ________ after the performance." },
+  { word: "author", sentence: "The ________ wrote a mystery novel." }
+];
+
+let words = [...allWords];
+let current = 0;
+let score = 0;
+let incorrectWords = [];
+let attemptHistory = [];
+let typedWord = "";
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-GB";
+  speechSynthesis.speak(utterance);
+}
+
+function loadQuestion() {
+  typedWord = "";
+  document.getElementById("feedback").textContent = "";
+  updateSentence();
+  updateTypedDisplay();
+  renderKeyboard();
+  const fullSentence = words[current].sentence.replace("________", words[current].word);
+  speak(fullSentence);
+}
+
+function updateSentence() {
+  const correctWord = words[current].word;
+  let displayWord = "";
+
+  for (let i = 0; i < correctWord.length; i++) {
+    displayWord += typedWord[i] ? typedWord[i] : "_";
+  }
+
+  const baseSentence = words[current].sentence;
+  const updated = baseSentence.replace("________", displayWord);
+  document.getElementById("sentenceDisplay").textContent = updated;
+}
+
+function updateTypedDisplay() {
+  const correctWord = words[current].word;
+  let display = "";
+  for (let i = 0; i < correctWord.length; i++) {
+    display += typedWord[i] ? typedWord[i] + " " : "_ ";
+  }
+  document.getElementById("typedWordDisplay").textContent = display.trim();
+}
+
+function renderKeyboard() {
+  const keyboard = document.getElementById("keyboard");
+  keyboard.innerHTML = "";
+
+  const rows = [
+    "QWERTYUIOP",
+    "ASDFGHJKL",
+    "ZXCVBNM"
+  ];
+
+  rows.forEach(row => {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "keyboard-row";
+    row.split("").forEach(letter => {
+      const btn = document.createElement("button");
+      btn.textContent = letter;
+      btn.onclick = () => typeLetter(letter.toLowerCase());
+      rowDiv.appendChild(btn);
     });
+    keyboard.appendChild(rowDiv);
+  });
+}
 
-    // Handle physical keyboard input (only on non-mobile)
-    if (!isMobile) {
-      document.addEventListener('keydown', (event) => {
-        const key = event.key.toUpperCase();
-        const validKeys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        if (validKeys.includes(key)) {
-          handleKeyPress(key);
-        }
-      });
+function typeLetter(letter) {
+  const correctWord = words[current].word;
+  if (typedWord.length < correctWord.length) {
+    typedWord += letter;
+    updateSentence();
+    updateTypedDisplay();
+  }
+}
+
+function backspace() {
+  typedWord = typedWord.slice(0, -1);
+  updateSentence();
+  updateTypedDisplay();
+}
+
+function checkAnswer() {
+  const correct = words[current].word.toLowerCase();
+  if (typedWord === correct) {
+    score++;
+    document.getElementById("feedback").textContent = "✅ Correct!";
+  } else {
+    document.getElementById("feedback").textContent = `❌ Incorrect. It was "${correct}".`;
+    incorrectWords.push(words[current]);
+  }
+  document.getElementById("score").textContent = `Score: ${score}`;
+  current++;
+  if (current < words.length) {
+    setTimeout(loadQuestion, 1500);
+  } else {
+    attemptHistory.push({ correct: score, total: words.length });
+    showSummary();
+  }
+}
+
+function showSummary() {
+  let summaryText = "🎉 Game Over!<br><br>";
+  attemptHistory.forEach((attempt, index) => {
+    summaryText += `Attempt ${index + 1}: ${attempt.correct} / ${attempt.total}<br>`;
+  });
+
+  document.getElementById("sentenceDisplay").textContent = "";
+  document.getElementById("typedWordDisplay").textContent = "";
+  document.getElementById("keyboard").innerHTML = "";
+  document.querySelector(".controls").style.display = "none";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("score").textContent = "";
+  document.getElementById("summary").innerHTML = summaryText;
+
+  if (incorrectWords.length > 0) {
+    document.getElementById("retryButton").style.display = "block";
+  }
+}
+
+function startRetry() {
+  words = [...incorrectWords];
+  incorrectWords = [];
+  current = 0;
+  score = 0;
+  typedWord = "";
+  document.querySelector(".controls").style.display = "block";
+  document.getElementById("retryButton").style.display = "none";
+  document.getElementById("summary").innerHTML = "";
+  document.getElementById("score").textContent = "Score: 0";
+  loadQuestion();
+}
+
+loadQuestion();
+
+// ✅ Physical keyboard support for non-mobile devices
+const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+if (!isMobile) {
+  document.addEventListener("keydown", (event) => {
+    const key = event.key.toLowerCase();
+    if (/^[a-z]$/.test(key)) {
+      typeLetter(key);
+    } else if (event.key === "Backspace") {
+      backspace();
+    } else if (event.key === "Enter") {
+      checkAnswer();
     }
-  </script>
-
-</body>
-</html>
+  });
