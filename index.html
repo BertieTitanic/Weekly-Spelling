@@ -30,22 +30,36 @@
     }
     .keyboard {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       gap: 8px;
       margin-bottom: 20px;
     }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
     .keyboard button {
-      padding: 10px 14px;
+      padding: 10px;
       font-size: 1em;
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      flex: 0 0 32px;
     }
     .keyboard button:hover {
       background: #005fa3;
+    }
+    @media (max-width: 500px) {
+      .keyboard button {
+        flex: 0 0 28px;
+        font-size: 0.9em;
+        padding: 8px;
+      }
     }
     .controls {
       text-align: center;
@@ -165,89 +179,4 @@ function renderKeyboard() {
 
   rows.forEach(row => {
     const rowDiv = document.createElement("div");
-    rowDiv.style.display = "flex";
-    rowDiv.style.justifyContent = "center";
-    rowDiv.style.gap = "8px";
-    row.split("").forEach(letter => {
-      const btn = document.createElement("button");
-      btn.textContent = letter;
-      btn.onclick = () => typeLetter(letter.toLowerCase());
-      rowDiv.appendChild(btn);
-    });
-    keyboard.appendChild(rowDiv);
-  });
-}
-
-
-function typeLetter(letter) {
-  const correctWord = words[current].word;
-  if (typedWord.length < correctWord.length) {
-    typedWord += letter;
-    updateSentence();
-    updateTypedDisplay();
-  }
-}
-
-function backspace() {
-  typedWord = typedWord.slice(0, -1);
-  updateSentence();
-  updateTypedDisplay();
-}
-
-function checkAnswer() {
-  const correct = words[current].word.toLowerCase();
-  if (typedWord === correct) {
-    score++;
-    document.getElementById("feedback").textContent = "✅ Correct!";
-  } else {
-    document.getElementById("feedback").textContent = `❌ Incorrect. It was "${correct}".`;
-    incorrectWords.push(words[current]);
-  }
-  document.getElementById("score").textContent = `Score: ${score}`;
-  current++;
-  if (current < words.length) {
-    setTimeout(loadQuestion, 1500);
-  } else {
-    attemptHistory.push({ correct: score, total: words.length });
-    showSummary();
-  }
-}
-
-function showSummary() {
-  let summaryText = "🎉 Game Over!<br><br>";
-  attemptHistory.forEach((attempt, index) => {
-    summaryText += `Attempt ${index + 1}: ${attempt.correct} / ${attempt.total}<br>`;
-  });
-
-  document.getElementById("sentenceDisplay").textContent = "";
-  document.getElementById("typedWordDisplay").textContent = "";
-  document.getElementById("keyboard").innerHTML = "";
-  document.querySelector(".controls").style.display = "none";
-  document.getElementById("feedback").textContent = "";
-  document.getElementById("score").textContent = "";
-  document.getElementById("summary").innerHTML = summaryText;
-
-  if (incorrectWords.length > 0) {
-    document.getElementById("retryButton").style.display = "block";
-  }
-}
-
-function startRetry() {
-  words = [...incorrectWords];
-  incorrectWords = [];
-  current = 0;
-  score = 0;
-  typedWord = "";
-  document.querySelector(".controls").style.display = "block";
-  document.getElementById("retryButton").style.display = "none";
-  document.getElementById("summary").innerHTML = "";
-  document.getElementById("score").textContent = "Score: 0";
-  loadQuestion();
-}
-
-loadQuestion();
-</script>
-
-</body>
-</html>
-
+    rowDiv.class
