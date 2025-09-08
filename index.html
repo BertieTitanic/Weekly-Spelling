@@ -43,23 +43,23 @@
       max-width: 100%;
     }
     .keyboard-row button {
-      padding: 10px;
-      font-size: 1em;
+      padding: 12px;
+      font-size: 1.1em;
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: 36px;
+      width: 42px;
     }
     .keyboard-row button:hover {
       background: #005fa3;
     }
     @media (max-width: 500px) {
       .keyboard-row button {
-        width: 28px;
-        font-size: 0.9em;
-        padding: 8px;
+        width: 32px;
+        font-size: 1em;
+        padding: 10px;
       }
     }
     .controls {
@@ -258,18 +258,7 @@ function startRetry() {
 }
 
 loadQuestion();
+</script>
 
-// ✅ Physical keyboard support for non-mobile devices
-const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
-if (!isMobile) {
-  document.addEventListener("keydown", (event) => {
-    const key = event.key.toLowerCase();
-    if (/^[a-z]$/.test(key)) {
-      typeLetter(key);
-    } else if (event.key === "Backspace") {
-      backspace();
-    } else if (event.key === "Enter") {
-      checkAnswer();
-    }
-  });
+</body>
+</html>
