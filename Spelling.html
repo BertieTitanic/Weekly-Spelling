@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spelling Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #f0f4f8;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    .sentence {
+      font-size: 1.2em;
+      margin: 20px 0;
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      background: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .score {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .summary {
+      margin-top: 20px;
+      font-size: 1em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Spelling Challenge</h1>
+<div class="sentence" id="sentenceDisplay"></div>
+<input type="text" id="answerInput" placeholder="Type the missing word" oninput="updateSentence()" />
+<button onclick="checkAnswer()">Check Answer</button>
+<div class="feedback" id="feedback"></div>
+<div class="score" id="score">Score: 0</div>
+<button id="retryButton" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
+<div class="summary" id="summary"></div>
+
+<script>
+const allWords = [
+  { word: "caught", sentence: "A boy ________ a ball." },
+  { word: "naughty", sentence: "The ________ puppy chewed the shoes." },
+  { word: "taught", sentence: "She ________ me how to swim." },
+  { word: "daughter", sentence: "His ________ loves painting." },
+  { word: "autumn", sentence: "Leaves fall in ________." },
+  { word: "clause", sentence: "The contract has a special ________." },
+  { word: "cause", sentence: "We donated to a good ________." },
+  { word: "astronaut", sentence: "The ________ floated in space." },
+  { word: "applaud", sentence: "We ________ after the performance." },
+  { word: "author", sentence: "The ________ wrote a mystery novel." }
+];
+
+let words = [...allWords];
+let current = 0;
+let score = 0;
+let incorrectWords = [];
+let attemptHistory = [];
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-GB";
+  speechSynthesis.speak(utterance);
+}
+
+function loadQuestion() {
+  document.getElementById("answerInput").value = "";
+  document.getElementById("feedback").textContent = "";
+  updateSentence();
+  const fullSentence = words[current].sentence.replace("________", words[current].word);
+  speak(fullSentence);
+}
+
+function updateSentence() {
+  const input = document.getElementById("answerInput").value;
+  const correctWord = words[current].word;
+  let displayWord = "";
+
+  for (let i = 0; i < correctWord.length; i++) {
+    displayWord += input[i] ? input[i] : "_";
+  }
+
+  const baseSentence = words[current].sentence;
+  const updated = baseSentence.replace("________", displayWord);
+  document.getElementById("sentenceDisplay").textContent = updated;
+}
+
+function checkAnswer() {
+  const input = document.getElementById("answerInput").value.trim().toLowerCase();
+  const correct = words[current].word.toLowerCase();
+  if (input === correct) {
+    score++;
+    document.getElementById("feedback").textContent = "✅ Correct!";
+  } else {
+    document.getElementById("feedback").textContent = `❌ Incorrect. It was "${correct}".`;
+    incorrectWords.push(words[current]);
+  }
+  document.getElementById("score").textContent = `Score: ${score}`;
+  current++;
+  if (current < words.length) {
+    setTimeout(loadQuestion, 1500);
+  } else {
+    attemptHistory.push({ correct: score, total: words.length });
+    showSummary();
+  }
+}
+
+function showSummary() {
+  let summaryText = "🎉 Game Over!<br><br>";
+  attemptHistory.forEach((attempt, index) => {
+    summaryText += `Attempt ${index + 1}: ${attempt.correct} / ${attempt.total}<br>`;
+  });
+
+  document.getElementById("sentenceDisplay").textContent = "";
+  document.getElementById("answerInput").style.display = "none";
+  document.querySelector("button").style.display = "none";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("score").textContent = "";
+  document.getElementById("summary").innerHTML = summaryText;
+
+  if (incorrectWords.length > 0) {
+    document.getElementById("retryButton").style.display = "block";
+  }
+}
+
+function startRetry() {
+  words = [...incorrectWords];
+  incorrectWords = [];
+  current = 0;
+  score = 0;
+  document.getElementById("answerInput").style.display = "block";
+  document.querySelector("button").style.display = "block";
+  document.getElementById("retryButton").style.display = "none";
+  document.getElementById("summary").innerHTML = "";
+  document.getElementById("score").textContent = "Score: 0";
+  loadQuestion();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
