@@ -89,6 +89,22 @@
       font-size: 1em;
       text-align: center;
     }
+.correct-word {
+  color: green;
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.incorrect-word {
+  color: red;
+  text-decoration: line-through;
+  font-size: 2em;
+  margin-right: 10px;
+}
+
+
+
+
   </style>
 </head>
 <body>
@@ -108,6 +124,15 @@
 <div class="score" id="score">Score: 0</div>
 <button id="retryButton" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
 <div class="summary" id="summary"></div>
+
+<div id="correctReview" style="display:none; text-align:center; margin-top:20px;">
+  <div style="font-size:2em; font-weight:bold;" id="correctWordDisplay"></div>
+  <button onclick="continueAfterReview()" style="margin-top:15px;">Continue</button>
+</div>
+
+<div style="text-align:center; margin-top:10px;">
+  <button onclick="listenAgain()">🔊 Listen Again</button>
+</div>
 
 <script>
 const allWords = [
@@ -211,18 +236,45 @@ function checkAnswer() {
   if (typedWord === correct) {
     score++;
     document.getElementById("feedback").textContent = "✅ Correct!";
+    document.getElementById("score").textContent = `Score: ${score}`;
+    current++;
+    setTimeout(() => {
+      if (current < words.length) {
+        loadQuestion();
+      } else {
+        attemptHistory.push({ correct: score, total: words.length });
+        showSummary();
+      }
+    }, 1500);
   } else {
-    document.getElementById("feedback").textContent = `❌ Incorrect. It was "${correct}".`;
+    document.getElementById("feedback").textContent = "❌ Incorrect.";
+    const correctHTML = `<span class="incorrect-word">${typedWord}</span><span class="correct-word">${words[current].word}</span>`;
+    document.getElementById("correctWordDisplay").innerHTML = correctHTML;
+    document.getElementById("correctReview").style.display = "block";
+    document.querySelector(".controls").style.display = "none";
+    document.getElementById("keyboard").style.display = "none";
     incorrectWords.push(words[current]);
   }
+}
+
+
+function continueAfterReview() {
+  document.getElementById("correctReview").style.display = "none";
+  document.querySelector(".controls").style.display = "block";
+  document.getElementById("keyboard").style.display = "flex";
   document.getElementById("score").textContent = `Score: ${score}`;
   current++;
   if (current < words.length) {
-    setTimeout(loadQuestion, 1500);
+    loadQuestion();
   } else {
     attemptHistory.push({ correct: score, total: words.length });
     showSummary();
   }
+}
+
+function listenAgain() {
+  const fullSentence = words[current].sentence.replace("________", words[current].word);
+  speak(fullSentence);
 }
 
 function showSummary() {
@@ -276,3 +328,4 @@ document.addEventListener("keydown", (event) => {
 
 </body>
 </html>
+
