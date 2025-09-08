@@ -93,14 +93,17 @@
   color: green;
   font-weight: bold;
   font-size: 2em;
+  display: block;
+  margin-top: 10px;
 }
 
 .incorrect-word {
   color: red;
   text-decoration: line-through;
   font-size: 2em;
-  margin-right: 10px;
+  display: block;
 }
+
 
 
 
@@ -248,14 +251,17 @@ function checkAnswer() {
     }, 1500);
   } else {
     document.getElementById("feedback").textContent = "❌ Incorrect.";
-    const correctHTML = `<span class="incorrect-word">${typedWord}</span><span class="correct-word">${words[current].word}</span>`;
-    document.getElementById("correctWordDisplay").innerHTML = correctHTML;
+    document.getElementById("correctWordDisplay").innerHTML = `
+      <span class="incorrect-word">${typedWord}</span>
+      <span class="correct-word">${words[current].word}</span>
+    `;
     document.getElementById("correctReview").style.display = "block";
     document.querySelector(".controls").style.display = "none";
     document.getElementById("keyboard").style.display = "none";
     incorrectWords.push(words[current]);
   }
 }
+
 
 
 function continueAfterReview() {
