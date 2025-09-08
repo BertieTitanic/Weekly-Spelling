@@ -156,14 +156,28 @@ function updateTypedDisplay() {
 function renderKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  letters.forEach(letter => {
-    const btn = document.createElement("button");
-    btn.textContent = letter;
-    btn.onclick = () => typeLetter(letter.toLowerCase());
-    keyboard.appendChild(btn);
+
+  const rows = [
+    "QWERTYUIOP",
+    "ASDFGHJKL",
+    "ZXCVBNM"
+  ];
+
+  rows.forEach(row => {
+    const rowDiv = document.createElement("div");
+    rowDiv.style.display = "flex";
+    rowDiv.style.justifyContent = "center";
+    rowDiv.style.gap = "8px";
+    row.split("").forEach(letter => {
+      const btn = document.createElement("button");
+      btn.textContent = letter;
+      btn.onclick = () => typeLetter(letter.toLowerCase());
+      rowDiv.appendChild(btn);
+    });
+    keyboard.appendChild(rowDiv);
   });
 }
+
 
 function typeLetter(letter) {
   const correctWord = words[current].word;
@@ -236,3 +250,4 @@ loadQuestion();
 
 </body>
 </html>
+
