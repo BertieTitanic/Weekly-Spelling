@@ -61,7 +61,16 @@
 
 <h1>Spelling Challenge</h1>
 <div class="sentence" id="sentenceDisplay"></div>
-<input type="text" id="answerInput" placeholder="Type the missing word" oninput="updateSentence()" />
+<input 
+  type="text" 
+  id="answerInput" 
+  placeholder="Type the missing word" 
+  oninput="updateSentence()" 
+  autocomplete="off" 
+  autocorrect="off" 
+  autocapitalize="off" 
+  spellcheck="false"
+/>
 <button onclick="checkAnswer()">Check Answer</button>
 <div class="feedback" id="feedback"></div>
 <div class="score" id="score">Score: 0</div>
