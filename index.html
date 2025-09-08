@@ -22,17 +22,35 @@
       margin: 20px 0;
       text-align: center;
     }
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      font-size: 1em;
-      box-sizing: border-box;
+    .typed-word {
+      font-size: 1.4em;
+      text-align: center;
       margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      letter-spacing: 2px;
     }
-    button {
-      width: 100%;
+    .keyboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .keyboard button {
+      padding: 10px 14px;
+      font-size: 1em;
+      background: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .keyboard button:hover {
+      background: #005fa3;
+    }
+    .controls {
+      text-align: center;
+    }
+    .controls button {
       padding: 12px;
       font-size: 1em;
       background: #0078D4;
@@ -40,6 +58,7 @@
       border: none;
       border-radius: 5px;
       margin-top: 10px;
+      width: 100%;
     }
     .feedback {
       margin-top: 15px;
@@ -61,17 +80,15 @@
 
 <h1>Spelling Challenge</h1>
 <div class="sentence" id="sentenceDisplay"></div>
-<input 
-  type="text" 
-  id="answerInput" 
-  placeholder="Type the missing word" 
-  oninput="updateSentence()" 
-  autocomplete="off" 
-  autocorrect="off" 
-  autocapitalize="off" 
-  spellcheck="false"
-/>
-<button onclick="checkAnswer()">Check Answer</button>
+<div class="typed-word" id="typedWordDisplay">_ _ _ _ _</div>
+
+<div class="keyboard" id="keyboard"></div>
+
+<div class="controls">
+  <button onclick="checkAnswer()">Check Answer</button>
+  <button onclick="backspace()">Backspace</button>
+</div>
+
 <div class="feedback" id="feedback"></div>
 <div class="score" id="score">Score: 0</div>
 <button id="retryButton" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
@@ -96,6 +113,7 @@ let current = 0;
 let score = 0;
 let incorrectWords = [];
 let attemptHistory = [];
+let typedWord = "";
 
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
@@ -104,20 +122,21 @@ function speak(text) {
 }
 
 function loadQuestion() {
-  document.getElementById("answerInput").value = "";
+  typedWord = "";
   document.getElementById("feedback").textContent = "";
   updateSentence();
+  updateTypedDisplay();
+  renderKeyboard();
   const fullSentence = words[current].sentence.replace("________", words[current].word);
   speak(fullSentence);
 }
 
 function updateSentence() {
-  const input = document.getElementById("answerInput").value;
   const correctWord = words[current].word;
   let displayWord = "";
 
   for (let i = 0; i < correctWord.length; i++) {
-    displayWord += input[i] ? input[i] : "_";
+    displayWord += typedWord[i] ? typedWord[i] : "_";
   }
 
   const baseSentence = words[current].sentence;
@@ -125,10 +144,45 @@ function updateSentence() {
   document.getElementById("sentenceDisplay").textContent = updated;
 }
 
+function updateTypedDisplay() {
+  const correctWord = words[current].word;
+  let display = "";
+  for (let i = 0; i < correctWord.length; i++) {
+    display += typedWord[i] ? typedWord[i] + " " : "_ ";
+  }
+  document.getElementById("typedWordDisplay").textContent = display.trim();
+}
+
+function renderKeyboard() {
+  const keyboard = document.getElementById("keyboard");
+  keyboard.innerHTML = "";
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  letters.forEach(letter => {
+    const btn = document.createElement("button");
+    btn.textContent = letter;
+    btn.onclick = () => typeLetter(letter.toLowerCase());
+    keyboard.appendChild(btn);
+  });
+}
+
+function typeLetter(letter) {
+  const correctWord = words[current].word;
+  if (typedWord.length < correctWord.length) {
+    typedWord += letter;
+    updateSentence();
+    updateTypedDisplay();
+  }
+}
+
+function backspace() {
+  typedWord = typedWord.slice(0, -1);
+  updateSentence();
+  updateTypedDisplay();
+}
+
 function checkAnswer() {
-  const input = document.getElementById("answerInput").value.trim().toLowerCase();
   const correct = words[current].word.toLowerCase();
-  if (input === correct) {
+  if (typedWord === correct) {
     score++;
     document.getElementById("feedback").textContent = "✅ Correct!";
   } else {
@@ -152,8 +206,9 @@ function showSummary() {
   });
 
   document.getElementById("sentenceDisplay").textContent = "";
-  document.getElementById("answerInput").style.display = "none";
-  document.querySelector("button").style.display = "none";
+  document.getElementById("typedWordDisplay").textContent = "";
+  document.getElementById("keyboard").innerHTML = "";
+  document.querySelector(".controls").style.display = "none";
   document.getElementById("feedback").textContent = "";
   document.getElementById("score").textContent = "";
   document.getElementById("summary").innerHTML = summaryText;
@@ -168,8 +223,8 @@ function startRetry() {
   incorrectWords = [];
   current = 0;
   score = 0;
-  document.getElementById("answerInput").style.display = "block";
-  document.querySelector("button").style.display = "block";
+  typedWord = "";
+  document.querySelector(".controls").style.display = "block";
   document.getElementById("retryButton").style.display = "none";
   document.getElementById("summary").innerHTML = "";
   document.getElementById("score").textContent = "Score: 0";
