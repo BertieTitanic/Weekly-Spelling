@@ -17,15 +17,12 @@
       font-size: 1.5em;
       margin-bottom: 20px;
     }
-    .sentence {
-      font-size: 1.2em;
-      margin: 20px 0;
+    .sentence, .typed-word, .feedback, .score, .summary {
       text-align: center;
+      margin: 10px 0;
     }
     .typed-word {
       font-size: 1.4em;
-      text-align: center;
-      margin-bottom: 10px;
       letter-spacing: 2px;
     }
     .keyboard {
@@ -62,9 +59,6 @@
         padding: 10px;
       }
     }
-    .controls {
-      text-align: center;
-    }
     .controls button {
       padding: 12px;
       font-size: 1em;
@@ -75,47 +69,40 @@
       margin-top: 10px;
       width: 100%;
     }
-    .feedback {
-      margin-top: 15px;
+    .correct-word {
+      color: green;
       font-weight: bold;
-      text-align: center;
-    }
-    .score {
+      font-size: 2em;
+      display: block;
       margin-top: 10px;
-      text-align: center;
     }
-    .summary {
-      margin-top: 20px;
-      font-size: 1em;
-      text-align: center;
+    .incorrect-word {
+      color: red;
+      text-decoration: line-through;
+      font-size: 2em;
+      display: block;
     }
-.correct-word {
-  color: green;
-  font-weight: bold;
-  font-size: 2em;
-  display: block;
-  margin-top: 10px;
-}
-
-.incorrect-word {
-  color: red;
-  text-decoration: line-through;
-  font-size: 2em;
-  display: block;
-}
-
-
-
-
-
   </style>
 </head>
 <body>
 
 <h1>Spelling Challenge</h1>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <label for="weekSelect">Select Week:</label>
+  <select id="weekSelect" onchange="selectWeek()">
+    <option value="1">Week 1</option>
+    <option value="2">Week 2</option>
+<option value="3">Week 3</option>
+<option value="4">Week 4</option>
+<option value="5">Week 5</option>
+<option value="6">Week 6</option>
+    <option value="review">Review Week</option>
+  </select>
+</div>
+
 <div class="sentence" id="sentenceDisplay"></div>
 <div class="typed-word" id="typedWordDisplay">_ _ _ _ _</div>
-
 <div class="keyboard" id="keyboard"></div>
 
 <div class="controls">
@@ -139,24 +126,86 @@
 
 <script>
 const allWords = [
-  { word: "caught", sentence: "A boy ________ a ball." },
-  { word: "naughty", sentence: "The ________ puppy chewed the shoes." },
-  { word: "taught", sentence: "She ________ me how to swim." },
-  { word: "daughter", sentence: "His ________ loves painting." },
-  { word: "autumn", sentence: "Leaves fall in ________." },
-  { word: "clause", sentence: "The contract has a special ________." },
-  { word: "cause", sentence: "We donated to a good ________." },
-  { word: "astronaut", sentence: "The ________ floated in space." },
-  { word: "applaud", sentence: "We ________ after the performance." },
-  { word: "author", sentence: "The ________ wrote a mystery novel." }
+
+  { week: 1, word: "caught", sentence: "A boy ________ a ball." },
+  { week: 1, word: "naughty", sentence: "The ________ puppy chewed the shoes." },
+  { week: 1, word: "taught", sentence: "She ________ me how to swim." },
+  { week: 1, word: "daughter", sentence: "His ________ loves painting." },
+  { week: 1, word: "autumn", sentence: "Leaves fall in ________." },
+  { week: 1, word: "clause", sentence: "The contract has a special ________." },
+  { week: 1, word: "cause", sentence: "We donated to a good ________." },
+  { week: 1, word: "astronaut", sentence: "The ________ floated in space." },
+  { week: 1, word: "applaud", sentence: "We ________ after the performance." },
+  { week: 1, word: "author", sentence: "The ________ wrote a mystery novel." },
+{ week: 2, word: "inactive", sentence: "The robot remained ________ until it was charged." },
+  { week: 2, word: "incorrect", sentence: "Your answer was ________, please try again." },
+  { week: 2, word: "inaccurate", sentence: "The map was ________ and led us the wrong way." },
+  { week: 2, word: "insecure", sentence: "She felt ________ about speaking in public." },
+  { week: 2, word: "indefinite", sentence: "The meeting was postponed for an ________ time." },
+  { week: 2, word: "incomplete", sentence: "The puzzle is ________ without the last piece." },
+  { week: 2, word: "infinite", sentence: "Space seems to stretch into ________ darkness." },
+  { week: 2, word: "inedible", sentence: "The burnt toast was completely ________." },
+  { week: 2, word: "inability", sentence: "His ________ to swim made the trip difficult." },
+  { week: 2, word: "indecisive", sentence: "She was too ________ to choose a movie." },
+  { week: 3, word: "immature", sentence: "His ________ behavior annoyed the teacher." },
+  { week: 3, word: "immeasurable", sentence: "The ocean’s depth is almost ________." },
+  { week: 3, word: "impossible", sentence: "It’s ________ to lift that car alone." },
+  { week: 3, word: "immortal", sentence: "The hero was said to be ________." },
+  { week: 3, word: "imperfect", sentence: "Even the best plans can be ________." },
+  { week: 3, word: "impatient", sentence: "He grew ________ while waiting in line." },
+  { week: 3, word: "immovable", sentence: "The rock was too heavy and ________." },
+  { week: 3, word: "impolite", sentence: "Interrupting someone is very ________." },
+  { week: 3, word: "important", sentence: "It’s ________ to brush your teeth daily." },
+  { week: 3, word: "improper", sentence: "Wearing flip-flops to a wedding is ________." },
+
+  { week: 4, word: "illegal", sentence: "It is ________ to park in front of a fire hydrant." },
+  { week: 4, word: "illegible", sentence: "His handwriting was so messy it was ________." },
+  { week: 4, word: "illogical", sentence: "That explanation sounds ________ to me." },
+  { week: 4, word: "illiterate", sentence: "The program helps ________ adults learn to read." },
+  { week: 4, word: "illicit", sentence: "The police found ________ items in the bag." },
+  { week: 4, word: "irregular", sentence: "The heartbeat was ________ and needed attention." },
+  { week: 4, word: "irrelevant", sentence: "That comment was ________ to our discussion." },
+  { week: 4, word: "irresponsible", sentence: "It’s ________ to leave the stove on unattended." },
+  { week: 4, word: "irrational", sentence: "His fear of butterflies was completely ________." },
+  { week: 4, word: "irresistible", sentence: "The smell of cookies was ________." },
+
+  { week: 5, word: "medal", sentence: "She won a gold ________ in the race." },
+  { week: 5, word: "meddle", sentence: "Don’t ________ in other people’s business." },
+  { week: 5, word: "missed", sentence: "He ________ the bus by just one minute." },
+  { week: 5, word: "mist", sentence: "The mountains were hidden in the morning ________." },
+  { week: 5, word: "scene", sentence: "The movie’s final ________ was very emotional." },
+  { week: 5, word: "seen", sentence: "Have you ________ my keys anywhere?" },
+  { week: 5, word: "board", sentence: "We need to ________ the plane now." },
+  { week: 5, word: "bored", sentence: "She felt ________ during the long lecture." },
+  { week: 5, word: "which", sentence: "________ book did you choose?" },
+  { week: 5, word: "witch", sentence: "The ________ flew across the sky on her broom." },
+
+  { week: 6, word: "division", sentence: "The math problem involved long ________." },
+  { week: 6, word: "invasion", sentence: "The castle was under ________." },
+  { week: 6, word: "confusion", sentence: "There was ________ about the meeting time." },
+  { week: 6, word: "decision", sentence: "She made a quick ________ to leave early." },
+  { week: 6, word: "collision", sentence: "The cars were damaged in the ________." },
+  { week: 6, word: "television", sentence: "We watched the news on ________." },
+  { week: 6, word: "revision", sentence: "He spent the weekend doing ________ for exams." },
+  { week: 6, word: "erosion", sentence: "The cliffs were shaped by wind and ________." },
+  { week: 6, word: "inclusion", sentence: "The team values ________ and diversity." },
+  { week: 6, word: "explosion", sentence: "There was a loud ________ at the factory." },
+
 ];
 
-let words = [...allWords];
+let selectedWeek = 1;
+let isReviewMode = false;
+let words = [];
 let current = 0;
 let score = 0;
 let incorrectWords = [];
 let attemptHistory = [];
 let typedWord = "";
+
+function getRandomWords(array, count) {
+  const shuffled = [...array].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count).map(w => ({ ...w }));
+}
 
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
@@ -200,12 +249,7 @@ function renderKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
 
-  const rows = [
-    "QWERTYUIOP",
-    "ASDFGHJKL",
-    "ZXCVBNM"
-  ];
-
+  const rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   rows.forEach(row => {
     const rowDiv = document.createElement("div");
     rowDiv.className = "keyboard-row";
@@ -262,8 +306,6 @@ function checkAnswer() {
   }
 }
 
-
-
 function continueAfterReview() {
   document.getElementById("correctReview").style.display = "none";
   document.querySelector(".controls").style.display = "block";
@@ -297,13 +339,44 @@ function showSummary() {
   document.getElementById("score").textContent = "";
   document.getElementById("summary").innerHTML = summaryText;
 
-  if (incorrectWords.length > 0) {
+  const retryable = selectedWeek === "review"
+    ? incorrectWords.length > 0
+    : incorrectWords.some(w => w.week === selectedWeek);
+
+  if (retryable) {
     document.getElementById("retryButton").style.display = "block";
   }
 }
 
+
+function selectWeek() {
+  const selected = document.getElementById("weekSelect").value;
+  isReviewMode = selected === "review";
+  selectedWeek = isReviewMode ? null : parseInt(selected);
+
+  words = isReviewMode
+    ? getRandomWords(allWords, 10)
+    : allWords.filter(w => w.week === selectedWeek).map(w => ({ ...w }));
+
+  current = 0;
+  score = 0;
+  incorrectWords = [];
+  typedWord = "";
+  document.getElementById("summary").innerHTML = "";
+  document.getElementById("score").textContent = "Score: 0";
+  document.getElementById("retryButton").style.display = "none";
+  document.getElementById("correctReview").style.display = "none";
+  document.querySelector(".controls").style.display = "block";
+  document.getElementById("keyboard").style.display = "flex";
+  loadQuestion();
+}
+
+
 function startRetry() {
-  words = [...incorrectWords];
+  words = isReviewMode
+    ? getRandomWords(incorrectWords, Math.min(10, incorrectWords.length))
+    : incorrectWords.filter(w => w.week === selectedWeek).map(w => ({ ...w }));
+
   incorrectWords = [];
   current = 0;
   score = 0;
@@ -315,23 +388,28 @@ function startRetry() {
   loadQuestion();
 }
 
-loadQuestion();
+
+window.onload = () => {
+  document.getElementById("weekSelect").value = "1";
+  selectWeek();
+};
+
 document.addEventListener("keydown", (event) => {
   const key = event.key.toUpperCase();
   const button = [...document.querySelectorAll(".keyboard-row button")]
     .find(btn => btn.textContent === key);
 
   if (button) {
-    button.click(); // Simulate button press
+    button.click();
   } else if (event.key === "Backspace") {
     backspace();
   } else if (event.key === "Enter") {
     checkAnswer();
   }
 });
-
 </script>
 
 </body>
 </html>
+
 
