@@ -122,7 +122,7 @@
 <script>
 
 const allWords = [
-  { term: "Autumn 1",  week: 1, word: "caught", sentence: "A boy ________ a ball." },
+{ term: "Autumn 1",  week: 1, word: "caught", sentence: "A boy ________ a ball." },
 { term: "Autumn 1",  week: 1, word: "naughty", sentence: "The ________ puppy chewed the shoes." },
 { term: "Autumn 1",  week: 1, word: "taught", sentence: "She ________ me how to swim." },
 { term: "Autumn 1",  week: 1, word: "daughter", sentence: "His ________ loves painting." },
@@ -490,6 +490,8 @@ const allWords = [
 { term: "Summer 2",  week: 6, word: "reluctantly", sentence: "He ________ agreed to help." },
 
 
+
+
 ];
 
 let selectedTerm = 1;
@@ -635,7 +637,7 @@ function showSummary() {
   document.getElementById("score").textContent = "";
   document.getElementById("summary").innerHTML = summaryText;
 
-  const retryable = isReviewMode && incorrectWords.some(w => w.term === selectedTerm);
+  const retryable = incorrectWords.some(w => w.term === selectedTerm);
   if (retryable) {
     document.getElementById("retryButton").style.display = "block";
   }
