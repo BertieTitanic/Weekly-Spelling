@@ -89,16 +89,11 @@
 <h1>Spelling Challenge</h1>
 
 <div style="text-align:center; margin-bottom:20px;">
+  <label for="termSelect">Select Term:</label>
+  <select id="termSelect" onchange="onTermChange()"></select>
+
   <label for="weekSelect">Select Week:</label>
-  <select id="weekSelect" onchange="selectWeek()">
-    <option value="1">Week 1</option>
-    <option value="2">Week 2</option>
-<option value="3">Week 3</option>
-<option value="4">Week 4</option>
-<option value="5">Week 5</option>
-<option value="6">Week 6</option>
-    <option value="review">Review Week</option>
-  </select>
+  <select id="weekSelect" onchange="selectTermAndWeek()"></select>
 </div>
 
 <div class="sentence" id="sentenceDisplay"></div>
@@ -125,74 +120,379 @@
 </div>
 
 <script>
+
 const allWords = [
+  { term: "Autumn 1",  week: 1, word: "caught", sentence: "A boy ________ a ball." },
+{ term: "Autumn 1",  week: 1, word: "naughty", sentence: "The ________ puppy chewed the shoes." },
+{ term: "Autumn 1",  week: 1, word: "taught", sentence: "She ________ me how to swim." },
+{ term: "Autumn 1",  week: 1, word: "daughter", sentence: "His ________ loves painting." },
+{ term: "Autumn 1",  week: 1, word: "autumn", sentence: "Leaves fall in ________." },
+{ term: "Autumn 1",  week: 1, word: "clause", sentence: "The contract has a special ________." },
+{ term: "Autumn 1",  week: 1, word: "cause", sentence: "We donated to a good ________." },
+{ term: "Autumn 1",  week: 1, word: "astronaut", sentence: "The ________ floated in space." },
+{ term: "Autumn 1",  week: 1, word: "applaud", sentence: "We ________ after the performance." },
+{ term: "Autumn 1",  week: 1, word: "author", sentence: "The ________ wrote a mystery novel." },
+{ term: "Autumn 1",  week: 2, word: "inactive", sentence: "The robot remained ________ until it was charged." },
+{ term: "Autumn 1",  week: 2, word: "incorrect", sentence: "Your answer was ________, please try again." },
+{ term: "Autumn 1",  week: 2, word: "inaccurate", sentence: "The map was ________ and led us the wrong way." },
+{ term: "Autumn 1",  week: 2, word: "insecure", sentence: "She felt ________ about speaking in public." },
+{ term: "Autumn 1",  week: 2, word: "indefinite", sentence: "The meeting was postponed for an ________ time." },
+{ term: "Autumn 1",  week: 2, word: "incomplete", sentence: "The puzzle is ________ without the last piece." },
+{ term: "Autumn 1",  week: 2, word: "infinite", sentence: "Space seems to stretch into ________ darkness." },
+{ term: "Autumn 1",  week: 2, word: "inedible", sentence: "The burnt toast was completely ________." },
+{ term: "Autumn 1",  week: 2, word: "inability", sentence: "His ________ to swim made the trip difficult." },
+{ term: "Autumn 1",  week: 2, word: "indecisive", sentence: "She was too ________ to choose a movie." },
+{ term: "Autumn 1",  week: 3, word: "immature", sentence: "His ________ behavior annoyed the teacher." },
+{ term: "Autumn 1",  week: 3, word: "immeasurable", sentence: "The ocean’s depth is almost ________." },
+{ term: "Autumn 1",  week: 3, word: "impossible", sentence: "It’s ________ to lift that car alone." },
+{ term: "Autumn 1",  week: 3, word: "immortal", sentence: "The hero was said to be ________." },
+{ term: "Autumn 1",  week: 3, word: "imperfect", sentence: "Even the best plans can be ________." },
+{ term: "Autumn 1",  week: 3, word: "impatient", sentence: "He grew ________ while waiting in line." },
+{ term: "Autumn 1",  week: 3, word: "immovable", sentence: "The rock was too heavy and ________." },
+{ term: "Autumn 1",  week: 3, word: "impolite", sentence: "Interrupting someone is very ________." },
+{ term: "Autumn 1",  week: 3, word: "important", sentence: "It’s ________ to brush your teeth daily." },
+{ term: "Autumn 1",  week: 3, word: "improper", sentence: "Wearing flip-flops to a wedding is ________." },
+{ term: "Autumn 1",  week: 4, word: "illegal", sentence: "It is ________ to park in front of a fire hydrant." },
+{ term: "Autumn 1",  week: 4, word: "illegible", sentence: "His handwriting was so messy it was ________." },
+{ term: "Autumn 1",  week: 4, word: "illogical", sentence: "That explanation sounds ________ to me." },
+{ term: "Autumn 1",  week: 4, word: "illiterate", sentence: "The program helps ________ adults learn to read." },
+{ term: "Autumn 1",  week: 4, word: "illicit", sentence: "The police found ________ items in the bag." },
+{ term: "Autumn 1",  week: 4, word: "irregular", sentence: "The heartbeat was ________ and needed attention." },
+{ term: "Autumn 1",  week: 4, word: "irrelevant", sentence: "That comment was ________ to our discussion." },
+{ term: "Autumn 1",  week: 4, word: "irresponsible", sentence: "It’s ________ to leave the stove on unattended." },
+{ term: "Autumn 1",  week: 4, word: "irrational", sentence: "His fear of butterflies was completely ________." },
+{ term: "Autumn 1",  week: 4, word: "irresistible", sentence: "The smell of cookies was ________." },
+{ term: "Autumn 1",  week: 5, word: "medal", sentence: "She won a gold ________ in the race." },
+{ term: "Autumn 1",  week: 5, word: "meddle", sentence: "Don’t ________ in other people’s business." },
+{ term: "Autumn 1",  week: 5, word: "missed", sentence: "He ________ the bus by just one minute." },
+{ term: "Autumn 1",  week: 5, word: "mist", sentence: "The mountains were hidden in the morning ________." },
+{ term: "Autumn 1",  week: 5, word: "scene", sentence: "The movie’s final ________ was very emotional." },
+{ term: "Autumn 1",  week: 5, word: "seen", sentence: "Have you ________ my keys anywhere?" },
+{ term: "Autumn 1",  week: 5, word: "board", sentence: "We need to ________ the plane now." },
+{ term: "Autumn 1",  week: 5, word: "bored", sentence: "She felt ________ during the long lecture." },
+{ term: "Autumn 1",  week: 5, word: "which", sentence: "________ book did you choose?" },
+{ term: "Autumn 1",  week: 5, word: "witch", sentence: "The ________ flew across the sky on her broom." },
+{ term: "Autumn 1",  week: 6, word: "division", sentence: "The math problem involved long ________." },
+{ term: "Autumn 1",  week: 6, word: "invasion", sentence: "The castle was under ________." },
+{ term: "Autumn 1",  week: 6, word: "confusion", sentence: "There was ________ about the meeting time." },
+{ term: "Autumn 1",  week: 6, word: "decision", sentence: "She made a quick ________ to leave early." },
+{ term: "Autumn 1",  week: 6, word: "collision", sentence: "The cars were damaged in the ________." },
+{ term: "Autumn 1",  week: 6, word: "television", sentence: "We watched the news on ________." },
+{ term: "Autumn 1",  week: 6, word: "revision", sentence: "He spent the weekend doing ________ for exams." },
+{ term: "Autumn 1",  week: 6, word: "erosion", sentence: "The cliffs were shaped by wind and ________." },
+{ term: "Autumn 1",  week: 6, word: "inclusion", sentence: "The team values ________ and diversity." },
+{ term: "Autumn 1",  week: 6, word: "explosion", sentence: "There was a loud ________ at the factory." },
 
-  { week: 1, word: "caught", sentence: "A boy ________ a ball." },
-  { week: 1, word: "naughty", sentence: "The ________ puppy chewed the shoes." },
-  { week: 1, word: "taught", sentence: "She ________ me how to swim." },
-  { week: 1, word: "daughter", sentence: "His ________ loves painting." },
-  { week: 1, word: "autumn", sentence: "Leaves fall in ________." },
-  { week: 1, word: "clause", sentence: "The contract has a special ________." },
-  { week: 1, word: "cause", sentence: "We donated to a good ________." },
-  { week: 1, word: "astronaut", sentence: "The ________ floated in space." },
-  { week: 1, word: "applaud", sentence: "We ________ after the performance." },
-  { week: 1, word: "author", sentence: "The ________ wrote a mystery novel." },
-{ week: 2, word: "inactive", sentence: "The robot remained ________ until it was charged." },
-  { week: 2, word: "incorrect", sentence: "Your answer was ________, please try again." },
-  { week: 2, word: "inaccurate", sentence: "The map was ________ and led us the wrong way." },
-  { week: 2, word: "insecure", sentence: "She felt ________ about speaking in public." },
-  { week: 2, word: "indefinite", sentence: "The meeting was postponed for an ________ time." },
-  { week: 2, word: "incomplete", sentence: "The puzzle is ________ without the last piece." },
-  { week: 2, word: "infinite", sentence: "Space seems to stretch into ________ darkness." },
-  { week: 2, word: "inedible", sentence: "The burnt toast was completely ________." },
-  { week: 2, word: "inability", sentence: "His ________ to swim made the trip difficult." },
-  { week: 2, word: "indecisive", sentence: "She was too ________ to choose a movie." },
-  { week: 3, word: "immature", sentence: "His ________ behavior annoyed the teacher." },
-  { week: 3, word: "immeasurable", sentence: "The ocean’s depth is almost ________." },
-  { week: 3, word: "impossible", sentence: "It’s ________ to lift that car alone." },
-  { week: 3, word: "immortal", sentence: "The hero was said to be ________." },
-  { week: 3, word: "imperfect", sentence: "Even the best plans can be ________." },
-  { week: 3, word: "impatient", sentence: "He grew ________ while waiting in line." },
-  { week: 3, word: "immovable", sentence: "The rock was too heavy and ________." },
-  { week: 3, word: "impolite", sentence: "Interrupting someone is very ________." },
-  { week: 3, word: "important", sentence: "It’s ________ to brush your teeth daily." },
-  { week: 3, word: "improper", sentence: "Wearing flip-flops to a wedding is ________." },
+{ term: "Autumn 2",  week: 1, word: "expansion", sentence: "The company’s rapid ________ surprised everyone." },
+{ term: "Autumn 2",  week: 1, word: "extension", sentence: "We requested an ________ on the deadline." },
+{ term: "Autumn 2",  week: 1, word: "comprehension", sentence: "His ________ of the topic was impressive." },
+{ term: "Autumn 2",  week: 1, word: "tension", sentence: "There was a lot of ________ in the room before the results were announced." },
+{ term: "Autumn 2",  week: 1, word: "corrosion", sentence: "The metal showed signs of ________ after the storm." },
+{ term: "Autumn 2",  week: 1, word: "supervision", sentence: "The children were playing under close ________." },
+{ term: "Autumn 2",  week: 1, word: "fusion", sentence: "The dish is a ________ of Indian and British flavours." },
+{ term: "Autumn 2",  week: 1, word: "conclusion", sentence: "We came to the ________ after hours of debate." },
+{ term: "Autumn 2",  week: 1, word: "persuasion", sentence: "It took some ________ to get him to agree." },
+{ term: "Autumn 2",  week: 1, word: "suspension", sentence: "Her ________ from school lasted a week." },
+{ term: "Autumn 2",  week: 2, word: "expression", sentence: "His face showed no ________ at all." },
+{ term: "Autumn 2",  week: 2, word: "discussion", sentence: "We had a long ________ about the new policy." },
+{ term: "Autumn 2",  week: 2, word: "confession", sentence: "Her tearful ________ shocked everyone." },
+{ term: "Autumn 2",  week: 2, word: "permission", sentence: "You need ________ to enter that area." },
+{ term: "Autumn 2",  week: 2, word: "admission", sentence: "His ________ to the university was celebrated." },
+{ term: "Autumn 2",  week: 2, word: "transmission", sentence: "The car’s ________ needs repairing." },
+{ term: "Autumn 2",  week: 2, word: "possession", sentence: "That book is now in my ________." },
+{ term: "Autumn 2",  week: 2, word: "profession", sentence: "Teaching is a noble ________." },
+{ term: "Autumn 2",  week: 2, word: "depression", sentence: "He struggled with ________ for years." },
+{ term: "Autumn 2",  week: 2, word: "impression", sentence: "She made a great ________ at the interview." },
+{ term: "Autumn 2",  week: 3, word: "definite", sentence: "There’s no ________ answer to that question." },
+{ term: "Autumn 2",  week: 3, word: "invention", sentence: "The new ________ changed the way we live." },
+{ term: "Autumn 2",  week: 3, word: "injection", sentence: "He winced at the ________ in his arm." },
+{ term: "Autumn 2",  week: 3, word: "action", sentence: "We must take immediate ________ to fix this." },
+{ term: "Autumn 2",  week: 3, word: "question", sentence: "That’s a good ________, let me think." },
+{ term: "Autumn 2",  week: 3, word: "mention", sentence: "Did you hear the ________ of her name?" },
+{ term: "Autumn 2",  week: 3, word: "attraction", sentence: "The London Eye is a popular ________ for tourists." },
+{ term: "Autumn 2",  week: 3, word: "translation", sentence: "The ________ of the book was well received." },
+{ term: "Autumn 2",  week: 3, word: "devotion", sentence: "Her ________ to her work is admirable." },
+{ term: "Autumn 2",  week: 3, word: "position", sentence: "He applied for the ________ last week." },
+{ term: "Autumn 2",  week: 3, word: "solution", sentence: "We finally found a ________ to the problem." },
+{ term: "Autumn 2",  week: 4, word: "musician", sentence: "He’s a talented ________ with three albums." },
+{ term: "Autumn 2",  week: 4, word: "politician", sentence: "The ________ gave a speech in Parliament." },
+{ term: "Autumn 2",  week: 4, word: "electrician", sentence: "We called an ________ to fix the wiring." },
+{ term: "Autumn 2",  week: 4, word: "magician", sentence: "The ________ pulled a rabbit from his hat." },
+{ term: "Autumn 2",  week: 4, word: "mathematician", sentence: "The ________ solved the equation quickly." },
+{ term: "Autumn 2",  week: 4, word: "dietician", sentence: "The ________ recommended a new meal plan." },
+{ term: "Autumn 2",  week: 4, word: "statistician", sentence: "The ________ analysed the survey results." },
+{ term: "Autumn 2",  week: 4, word: "technician", sentence: "A ________ came to repair the boiler." },
+{ term: "Autumn 2",  week: 4, word: "clinician", sentence: "The ________ reviewed the patient’s symptoms." },
+{ term: "Autumn 2",  week: 4, word: "beautician", sentence: "She booked an appointment with the ________." },
+{ term: "Autumn 2",  week: 5, word: "though", sentence: "I liked the film, ________ it was a bit long." },
+{ term: "Autumn 2",  week: 5, word: "although", sentence: "________ it rained, we still went out." },
+{ term: "Autumn 2",  week: 5, word: "dough", sentence: "Knead the ________ until it’s smooth." },
+{ term: "Autumn 2",  week: 5, word: "through", sentence: "We walked ________ the park to get home." },
+{ term: "Autumn 2",  week: 5, word: "breakthrough", sentence: "The scientist made a major ________ in cancer research." },
+{ term: "Autumn 2",  week: 5, word: "thought", sentence: "That’s an interesting ________, I hadn’t considered it." },
+{ term: "Autumn 2",  week: 5, word: "bought", sentence: "I ________ a new coat yesterday." },
+{ term: "Autumn 2",  week: 5, word: "brought", sentence: "She ________ biscuits for everyone." },
+{ term: "Autumn 2",  week: 5, word: "fought", sentence: "They ________ bravely in the war." },
+{ term: "Autumn 2",  week: 5, word: "ought", sentence: "You ________ to apologise for that." },
+{ term: "Autumn 2",  week: 6, word: "interest", sentence: "He showed great ________ in astronomy." },
+{ term: "Autumn 2",  week: 6, word: "experiment", sentence: "The ________ failed due to a small error." },
+{ term: "Autumn 2",  week: 6, word: "potatoes", sentence: "She peeled the ________ for dinner." },
+{ term: "Autumn 2",  week: 6, word: "favourite", sentence: "That’s my ________ jumper, don’t lose it." },
+{ term: "Autumn 2",  week: 6, word: "imagine", sentence: "________ living in a castle!" },
+{ term: "Autumn 2",  week: 6, word: "material", sentence: "This ________ is soft and warm." },
+{ term: "Autumn 2",  week: 6, word: "promise", sentence: "He broke his ________ again." },
+{ term: "Autumn 2",  week: 6, word: "opposite", sentence: "Their house is ________ ours." },
+{ term: "Autumn 2",  week: 6, word: "minute", sentence: "I’ll be ready in a ________." },
 
-  { week: 4, word: "illegal", sentence: "It is ________ to park in front of a fire hydrant." },
-  { week: 4, word: "illegible", sentence: "His handwriting was so messy it was ________." },
-  { week: 4, word: "illogical", sentence: "That explanation sounds ________ to me." },
-  { week: 4, word: "illiterate", sentence: "The program helps ________ adults learn to read." },
-  { week: 4, word: "illicit", sentence: "The police found ________ items in the bag." },
-  { week: 4, word: "irregular", sentence: "The heartbeat was ________ and needed attention." },
-  { week: 4, word: "irrelevant", sentence: "That comment was ________ to our discussion." },
-  { week: 4, word: "irresponsible", sentence: "It’s ________ to leave the stove on unattended." },
-  { week: 4, word: "irrational", sentence: "His fear of butterflies was completely ________." },
-  { week: 4, word: "irresistible", sentence: "The smell of cookies was ________." },
 
-  { week: 5, word: "medal", sentence: "She won a gold ________ in the race." },
-  { week: 5, word: "meddle", sentence: "Don’t ________ in other people’s business." },
-  { week: 5, word: "missed", sentence: "He ________ the bus by just one minute." },
-  { week: 5, word: "mist", sentence: "The mountains were hidden in the morning ________." },
-  { week: 5, word: "scene", sentence: "The movie’s final ________ was very emotional." },
-  { week: 5, word: "seen", sentence: "Have you ________ my keys anywhere?" },
-  { week: 5, word: "board", sentence: "We need to ________ the plane now." },
-  { week: 5, word: "bored", sentence: "She felt ________ during the long lecture." },
-  { week: 5, word: "which", sentence: "________ book did you choose?" },
-  { week: 5, word: "witch", sentence: "The ________ flew across the sky on her broom." },
+{ term: "Spring 1",  week: 1, word: "accept", sentence: "I can’t ________ the gift, it’s too generous." },
+{ term: "Spring 1",  week: 1, word: "except", sentence: "Everyone came ________ Tom." },
+{ term: "Spring 1",  week: 1, word: "affect", sentence: "The cold weather may ________ your health." },
+{ term: "Spring 1",  week: 1, word: "effect", sentence: "The medicine had a calming ________ on her." },
+{ term: "Spring 1",  week: 1, word: "aloud", sentence: "He read the story ________ to the class." },
+{ term: "Spring 1",  week: 1, word: "allowed", sentence: "You’re not ________ to park here." },
+{ term: "Spring 1",  week: 1, word: "weather", sentence: "The ________ today is perfect for a picnic." },
+{ term: "Spring 1",  week: 1, word: "whether", sentence: "I don’t know ________ she’ll come or not." },
+{ term: "Spring 1",  week: 1, word: "whose", sentence: "Do you know ________ coat this is?" },
+{ term: "Spring 1",  week: 1, word: "who's", sentence: "________ coming to the party tonight?" },
+{ term: "Spring 1",  week: 2, word: "cereal", sentence: "I had a bowl of ________ for breakfast." },
+{ term: "Spring 1",  week: 2, word: "serial", sentence: "I’ve been watching that new crime ________ on telly." },
+{ term: "Spring 1",  week: 2, word: "check", sentence: "I’ll ________ the time before we leave." },
+{ term: "Spring 1",  week: 2, word: "cheque", sentence: "He wrote a ________ for £100." },
+{ term: "Spring 1",  week: 2, word: "through", sentence: "We walked ________ the tunnel together." },
+{ term: "Spring 1",  week: 2, word: "threw", sentence: "She ________ the ball across the field." },
+{ term: "Spring 1",  week: 2, word: "draft", sentence: "He sent me a rough ________ of the essay." },
+{ term: "Spring 1",  week: 2, word: "draught", sentence: "There’s a cold ________ coming from the window." },
+{ term: "Spring 1",  week: 2, word: "stares", sentence: "He always ________ at people in cafés." },
+{ term: "Spring 1",  week: 2, word: "stars", sentence: "The sky was full of shining ________ last night." },
+{ term: "Spring 1",  week: 3, word: "information", sentence: "I need more ________ before making a decision." },
+{ term: "Spring 1",  week: 3, word: "adoration", sentence: "Her ________ for the singer was obvious." },
+{ term: "Spring 1",  week: 3, word: "sensation", sentence: "There was a strange ________ in my arm." },
+{ term: "Spring 1",  week: 3, word: "preparation", sentence: "The ________ for the wedding took months." },
+{ term: "Spring 1",  week: 3, word: "education", sentence: "A good ________ is vital for success." },
+{ term: "Spring 1",  week: 3, word: "location", sentence: "We found the perfect ________ for the event." },
+{ term: "Spring 1",  week: 3, word: "exaggeration", sentence: "That’s a bit of an ________, don’t you think?" },
+{ term: "Spring 1",  week: 3, word: "concentration", sentence: "He lost his ________ during the exam." },
+{ term: "Spring 1",  week: 3, word: "imagination", sentence: "Her ________ knows no bounds." },
+{ term: "Spring 1",  week: 3, word: "organisation", sentence: "The ________ hosted a charity event." },
+{ term: "Spring 1",  week: 4, word: "creation", sentence: "This sculpture is a beautiful ________." },
+{ term: "Spring 1",  week: 4, word: "radiation", sentence: "The doctor explained the risks of ________." },
+{ term: "Spring 1",  week: 4, word: "indication", sentence: "There’s no clear ________ of improvement yet." },
+{ term: "Spring 1",  week: 4, word: "ventilation", sentence: "The room needs better ________." },
+{ term: "Spring 1",  week: 4, word: "relegation", sentence: "The team’s poor performance led to ________." },
+{ term: "Spring 1",  week: 4, word: "dedication", sentence: "Her ________ to the cause inspired many." },
+{ term: "Spring 1",  week: 4, word: "demonstration", sentence: "There was a peaceful ________ in the city centre." },
+{ term: "Spring 1",  week: 4, word: "abbreviation", sentence: "‘Dr’ is the ________ for ‘Doctor’." },
+{ term: "Spring 1",  week: 4, word: "translation", sentence: "The ________ of the novel was excellent." },
+{ term: "Spring 1",  week: 4, word: "vibration", sentence: "I felt a strange ________ under the floor." },
+{ term: "Spring 1",  week: 5, word: "submerge", sentence: "We watched the boat slowly ________ beneath the waves." },
+{ term: "Spring 1",  week: 5, word: "subheading", sentence: "Add a ________ to break up the text." },
+{ term: "Spring 1",  week: 5, word: "submarine", sentence: "The ________ disappeared into the deep sea." },
+{ term: "Spring 1",  week: 5, word: "subordinate", sentence: "He’s a ________ in the company hierarchy." },
+{ term: "Spring 1",  week: 5, word: "subway", sentence: "We took the ________ to get to the museum." },
+{ term: "Spring 1",  week: 5, word: "superman", sentence: "He dressed up as ________ for Halloween." },
+{ term: "Spring 1",  week: 5, word: "supervise", sentence: "I need someone to ________ the children during lunch." },
+{ term: "Spring 1",  week: 5, word: "supersede", sentence: "This new law will ________ the old one." },
+{ term: "Spring 1",  week: 5, word: "superpower", sentence: "Flying is his favourite ________." },
+{ term: "Spring 1",  week: 5, word: "superhuman", sentence: "She showed ________ strength during the rescue." },
+{ term: "Spring 1",  week: 6, word: "girls'", sentence: "The ________ changing room is on the left." },
+{ term: "Spring 1",  week: 6, word: "boys'", sentence: "The ________ football team won the match." },
+{ term: "Spring 1",  week: 6, word: "babies'", sentence: "The ________ toys are in that basket." },
+{ term: "Spring 1",  week: 6, word: "parents'", sentence: "The ________ meeting is scheduled for Thursday." },
+{ term: "Spring 1",  week: 6, word: "teachers'", sentence: "The ________ lounge is upstairs." },
+{ term: "Spring 1",  week: 6, word: "women's", sentence: "The ________ rights movement changed history." },
+{ term: "Spring 1",  week: 6, word: "men's", sentence: "The ________ section is at the back of the shop." },
+{ term: "Spring 1",  week: 6, word: "children's", sentence: "The ________ playground was recently renovated." },
+{ term: "Spring 1",  week: 6, word: "people's", sentence: "The ________ opinions were divided." },
+{ term: "Spring 1",  week: 6, word: "mice's", sentence: "The ________ footprints were all over the cupboard." },
 
-  { week: 6, word: "division", sentence: "The math problem involved long ________." },
-  { week: 6, word: "invasion", sentence: "The castle was under ________." },
-  { week: 6, word: "confusion", sentence: "There was ________ about the meeting time." },
-  { week: 6, word: "decision", sentence: "She made a quick ________ to leave early." },
-  { week: 6, word: "collision", sentence: "The cars were damaged in the ________." },
-  { week: 6, word: "television", sentence: "We watched the news on ________." },
-  { week: 6, word: "revision", sentence: "He spent the weekend doing ________ for exams." },
-  { week: 6, word: "erosion", sentence: "The cliffs were shaped by wind and ________." },
-  { week: 6, word: "inclusion", sentence: "The team values ________ and diversity." },
-  { week: 6, word: "explosion", sentence: "There was a loud ________ at the factory." },
+{ term: "Spring 2",  week: 1, word: "science", sentence: "She loves studying ________ at school." },
+{ term: "Spring 2",  week: 1, word: "crescent", sentence: "The moon was a thin ________ in the night sky." },
+{ term: "Spring 2",  week: 1, word: "discipline", sentence: "Good ________ is essential in the classroom." },
+{ term: "Spring 2",  week: 1, word: "fascinate", sentence: "Dinosaurs always ________ young children." },
+{ term: "Spring 2",  week: 1, word: "scent", sentence: "The sweet ________ of roses filled the air." },
+{ term: "Spring 2",  week: 1, word: "scissors", sentence: "Pass me the ________ to cut this paper." },
+{ term: "Spring 2",  week: 1, word: "ascent", sentence: "The ________ to the summit was exhausting." },
+{ term: "Spring 2",  week: 1, word: "descent", sentence: "The plane began its ________ into Heathrow." },
+{ term: "Spring 2",  week: 1, word: "scientist", sentence: "The ________ made a new discovery." },
+{ term: "Spring 2",  week: 1, word: "scenery", sentence: "The countryside ________ was breathtaking." },
+{ term: "Spring 2",  week: 2, word: "centre", sentence: "The shopping ________ was packed with people." },
+{ term: "Spring 2",  week: 2, word: "century", sentence: "That building dates back to the 18th ________." },
+{ term: "Spring 2",  week: 2, word: "certain", sentence: "I’m not ________ what time the train leaves." },
+{ term: "Spring 2",  week: 2, word: "recent", sentence: "There’s been a ________ increase in prices." },
+{ term: "Spring 2",  week: 2, word: "experience", sentence: "She gained valuable ________ during her internship." },
+{ term: "Spring 2",  week: 2, word: "sentence", sentence: "He wrote a long ________ with perfect grammar." },
+{ term: "Spring 2",  week: 2, word: "notice", sentence: "Did you ________ the sign on the door?" },
+{ term: "Spring 2",  week: 2, word: "celebrate", sentence: "We’ll ________ your birthday at the weekend." },
+{ term: "Spring 2",  week: 2, word: "ceremony", sentence: "The wedding ________ was held in a garden." },
+{ term: "Spring 2",  week: 2, word: "certificate", sentence: "He received a ________ for completing the course." },
+{ term: "Spring 2",  week: 3, word: "circle", sentence: "Draw a perfect ________ with a compass." },
+{ term: "Spring 2",  week: 3, word: "decide", sentence: "I can’t ________ what to wear today." },
+{ term: "Spring 2",  week: 3, word: "medicine", sentence: "Take your ________ before bed." },
+{ term: "Spring 2",  week: 3, word: "exercise", sentence: "Daily ________ keeps you healthy." },
+{ term: "Spring 2",  week: 3, word: "special", sentence: "Today is a ________ occasion." },
+{ term: "Spring 2",  week: 3, word: "cinema", sentence: "We’re going to the ________ to see a film." },
+{ term: "Spring 2",  week: 3, word: "decimal", sentence: "Use a ________ point in your answer." },
+{ term: "Spring 2",  week: 3, word: "accident", sentence: "He broke his arm in a car ________." },
+{ term: "Spring 2",  week: 3, word: "city", sentence: "London is a busy ________ with lots to do." },
+{ term: "Spring 2",  week: 3, word: "citizen", sentence: "Every ________ has rights and responsibilities." },
+{ term: "Spring 2",  week: 4, word: "phone", sentence: "I left my ________ at home." },
+{ term: "Spring 2",  week: 4, word: "phonics", sentence: "Children learn to read using ________." },
+{ term: "Spring 2",  week: 4, word: "microphone", sentence: "Speak clearly into the ________." },
+{ term: "Spring 2",  week: 4, word: "telephone", sentence: "The ________ rang loudly in the hallway." },
+{ term: "Spring 2",  week: 4, word: "homophone", sentence: "‘Pair’ and ‘pear’ are a type of ________." },
+{ term: "Spring 2",  week: 4, word: "real", sentence: "Is that painting ________ or a copy?" },
+{ term: "Spring 2",  week: 4, word: "reality", sentence: "The harsh ________ hit him hard." },
+{ term: "Spring 2",  week: 4, word: "realistic", sentence: "Be ________ about what you can achieve." },
+{ term: "Spring 2",  week: 4, word: "unreal", sentence: "The view from the top was absolutely ________." },
+{ term: "Spring 2",  week: 4, word: "realisation", sentence: "She came to the ________ that she was wrong." },
+{ term: "Spring 2",  week: 5, word: "solve", sentence: "Can you ________ this puzzle?" },
+{ term: "Spring 2",  week: 5, word: "solution", sentence: "We found a clever ________ to the problem." },
+{ term: "Spring 2",  week: 5, word: "insoluble", sentence: "The substance is ________ in water." },
+{ term: "Spring 2",  week: 5, word: "dissolve", sentence: "Sugar will ________ in hot tea." },
+{ term: "Spring 2",  week: 5, word: "solvent", sentence: "Use a strong ________ to remove the paint." },
+{ term: "Spring 2",  week: 5, word: "sign", sentence: "He put up a ‘For Sale’ ________ outside." },
+{ term: "Spring 2",  week: 5, word: "signature", sentence: "I need your ________ on this form." },
+{ term: "Spring 2",  week: 5, word: "assign", sentence: "The teacher will ________ homework tonight." },
+{ term: "Spring 2",  week: 5, word: "design", sentence: "She showed me her new dress ________." },
+{ term: "Spring 2",  week: 5, word: "signal", sentence: "Wait for the green ________ before crossing." },
+{ term: "Spring 2",  week: 6, word: "length", sentence: "Measure the ________ of the table." },
+{ term: "Spring 2",  week: 6, word: "strength", sentence: "He showed great ________ lifting that box." },
+{ term: "Spring 2",  week: 6, word: "purpose", sentence: "What’s the ________ of this meeting?" },
+{ term: "Spring 2",  week: 6, word: "history", sentence: "We’re learning about Roman ________ this term." },
+{ term: "Spring 2",  week: 6, word: "different", sentence: "They have very ________ opinions." },
+{ term: "Spring 2",  week: 6, word: "difficult", sentence: "That was a ________ question to answer." },
+{ term: "Spring 2",  week: 6, word: "separate", sentence: "Keep the dirty clothes ________ from the clean ones." },
+{ term: "Spring 2",  week: 6, word: "suppose", sentence: "I ________ we could try again tomorrow." },
+{ term: "Spring 2",  week: 6, word: "therefore", sentence: "It’s raining, ________ we’ll stay indoors." },
+{ term: "Spring 2",  week: 6, word: "knowledge", sentence: "Her ________ of art is impressive." },
+
+{ term: "Summer 1",  week: 1, word: "interact", sentence: "Children need to ________ with others to develop social skills." },
+{ term: "Summer 1",  week: 1, word: "interfere", sentence: "Don’t ________ in matters that don’t concern you." },
+{ term: "Summer 1",  week: 1, word: "intercity", sentence: "We took the ________ train to Manchester." },
+{ term: "Summer 1",  week: 1, word: "international", sentence: "She works for an ________ charity." },
+{ term: "Summer 1",  week: 1, word: "intermediate", sentence: "He’s in the ________ swimming group." },
+{ term: "Summer 1",  week: 1, word: "internet", sentence: "I found the recipe on the ________." },
+{ term: "Summer 1",  week: 1, word: "intergalactic", sentence: "The film was about an ________ space mission." },
+{ term: "Summer 1",  week: 1, word: "interrupt", sentence: "Please don’t ________ while I’m speaking." },
+{ term: "Summer 1",  week: 1, word: "intervene", sentence: "The teacher had to ________ in the argument." },
+{ term: "Summer 1",  week: 1, word: "interlude", sentence: "There was a short musical ________ between acts." },
+{ term: "Summer 1",  week: 2, word: "antiseptic", sentence: "Clean the wound with ________ before bandaging." },
+{ term: "Summer 1",  week: 2, word: "anticlockwise", sentence: "Turn the handle ________ to open it." },
+{ term: "Summer 1",  week: 2, word: "antisocial", sentence: "His behaviour at the party was quite ________." },
+{ term: "Summer 1",  week: 2, word: "antidote", sentence: "They gave him an ________ for the snake bite." },
+{ term: "Summer 1",  week: 2, word: "antibiotic", sentence: "The doctor prescribed an ________ for the infection." },
+{ term: "Summer 1",  week: 2, word: "antivenom", sentence: "The hospital had a supply of ________ ready." },
+{ term: "Summer 1",  week: 2, word: "anti-ageing", sentence: "She uses ________ cream every morning." },
+{ term: "Summer 1",  week: 2, word: "antifreeze", sentence: "Make sure there’s enough ________ in the car." },
+{ term: "Summer 1",  week: 2, word: "antiperspirant", sentence: "He applied ________ before heading out." },
+{ term: "Summer 1",  week: 2, word: "antigravity", sentence: "The astronauts trained in an ________ chamber." },
+{ term: "Summer 1",  week: 3, word: "autograph", sentence: "I asked the footballer for his ________." },
+{ term: "Summer 1",  week: 3, word: "autobiography", sentence: "Her ________ tells the story of her childhood." },
+{ term: "Summer 1",  week: 3, word: "automatic", sentence: "The doors opened with an ________ sensor." },
+{ term: "Summer 1",  week: 3, word: "autofocus", sentence: "My camera has ________ for clearer pictures." },
+{ term: "Summer 1",  week: 3, word: "autocorrect", sentence: "The message was changed by ________ again." },
+{ term: "Summer 1",  week: 3, word: "autopilot", sentence: "The plane was flying on ________ for most of the journey." },
+{ term: "Summer 1",  week: 3, word: "autopsy", sentence: "An ________ was performed to find the cause of death." },
+{ term: "Summer 1",  week: 3, word: "automobile", sentence: "He collects vintage ________s as a hobby." },
+{ term: "Summer 1",  week: 3, word: "autonomy", sentence: "The region was granted political ________." },
+{ term: "Summer 1",  week: 3, word: "autocue", sentence: "The presenter read from the ________ smoothly." },
+{ term: "Summer 1",  week: 4, word: "exit", sentence: "Use the nearest ________ in case of emergency." },
+{ term: "Summer 1",  week: 4, word: "extend", sentence: "We plan to ________ our holiday by two days." },
+{ term: "Summer 1",  week: 4, word: "explode", sentence: "The balloon might ________ if overfilled." },
+{ term: "Summer 1",  week: 4, word: "excursion", sentence: "We went on a school ________ to the museum." },
+{ term: "Summer 1",  week: 4, word: "exchange", sentence: "They did a gift ________ at Christmas." },
+{ term: "Summer 1",  week: 4, word: "export", sentence: "The company plans to ________ goods to Europe." },
+{ term: "Summer 1",  week: 4, word: "exclaim", sentence: "‘Wow!’ she did ________ when she saw the cake." },
+{ term: "Summer 1",  week: 4, word: "expel", sentence: "He was ________ from school for bad behaviour." },
+{ term: "Summer 1",  week: 4, word: "external", sentence: "The ________ walls need repainting." },
+{ term: "Summer 1",  week: 4, word: "exterior", sentence: "The house has a lovely ________ design." },
+{ term: "Summer 1",  week: 5, word: "non-stick", sentence: "I used a ________ pan to fry the eggs." },
+{ term: "Summer 1",  week: 5, word: "non-stop", sentence: "It was a ________ flight to Dubai." },
+{ term: "Summer 1",  week: 5, word: "non-starter", sentence: "That idea’s a complete ________, I’m afraid." },
+{ term: "Summer 1",  week: 5, word: "non-smoker", sentence: "He’s a ________, so we sat in the smoke-free area." },
+{ term: "Summer 1",  week: 5, word: "nonsense", sentence: "That’s absolute ________, and you know it." },
+{ term: "Summer 1",  week: 5, word: "non-fiction", sentence: "I prefer reading ________ books." },
+{ term: "Summer 1",  week: 5, word: "non-drip", sentence: "We bought ________ paint for the ceiling." },
+{ term: "Summer 1",  week: 5, word: "non-violent", sentence: "The protest was entirely ________." },
+{ term: "Summer 1",  week: 5, word: "non-profit", sentence: "She works for a ________ organisation." },
+{ term: "Summer 1",  week: 5, word: "non-believer", sentence: "He’s a ________ in ghosts and the supernatural." },
+{ term: "Summer 1",  week: 6, word: "calendar", sentence: "Mark the date on your ________." },
+{ term: "Summer 1",  week: 6, word: "grammar", sentence: "His ________ needs improvement." },
+{ term: "Summer 1",  week: 6, word: "regular", sentence: "She’s a ________ customer at the café." },
+{ term: "Summer 1",  week: 6, word: "particular", sentence: "I’m looking for a ________ shade of blue." },
+{ term: "Summer 1",  week: 6, word: "peculiar", sentence: "That’s a ________ smell, isn’t it?" },
+{ term: "Summer 1",  week: 6, word: "popular", sentence: "That singer is very ________ with teenagers." },
+{ term: "Summer 1",  week: 6, word: "consider", sentence: "I’ll ________ your suggestion carefully." },
+{ term: "Summer 1",  week: 6, word: "remember", sentence: "________ to lock the door before you leave." },
+{ term: "Summer 1",  week: 6, word: "quarter", sentence: "A ________ of the cake is missing." },
+{ term: "Summer 1",  week: 6, word: "integer", sentence: "Seven is an example of an ________." },
+
+{ term: "Summer 2",  week: 1, word: "dangerous", sentence: "That’s a ________ road to drive on at night." },
+{ term: "Summer 2",  week: 1, word: "poisonous", sentence: "Some mushrooms are highly ________." },
+{ term: "Summer 2",  week: 1, word: "mountainous", sentence: "We travelled through a ________ region in Wales." },
+{ term: "Summer 2",  week: 1, word: "joyous", sentence: "It was a truly ________ occasion." },
+{ term: "Summer 2",  week: 1, word: "synonymous", sentence: "Her name is ________ with kindness." },
+{ term: "Summer 2",  week: 1, word: "hazardous", sentence: "The chemicals are extremely ________ to handle." },
+{ term: "Summer 2",  week: 1, word: "riotous", sentence: "The crowd became ________ after the match." },
+{ term: "Summer 2",  week: 1, word: "perilous", sentence: "They embarked on a ________ journey across the desert." },
+{ term: "Summer 2",  week: 1, word: "momentous", sentence: "It was a ________ day in British history." },
+{ term: "Summer 2",  week: 1, word: "scandalous", sentence: "The politician was involved in a ________ affair." },
+{ term: "Summer 2",  week: 2, word: "tremendous", sentence: "He did a ________ job on the project." },
+{ term: "Summer 2",  week: 2, word: "enormous", sentence: "The elephant was ________ in size." },
+{ term: "Summer 2",  week: 2, word: "jealous", sentence: "She felt ________ of her sister’s success." },
+{ term: "Summer 2",  week: 2, word: "serious", sentence: "That’s a very ________ accusation." },
+{ term: "Summer 2",  week: 2, word: "hideous", sentence: "The wallpaper was absolutely ________." },
+{ term: "Summer 2",  week: 2, word: "fabulous", sentence: "You look ________ in that outfit." },
+{ term: "Summer 2",  week: 2, word: "curious", sentence: "I’m ________ to know what happened next." },
+{ term: "Summer 2",  week: 2, word: "anxious", sentence: "He’s feeling ________ about the exam." },
+{ term: "Summer 2",  week: 2, word: "obvious", sentence: "It’s ________ that she’s upset." },
+{ term: "Summer 2",  week: 2, word: "gorgeous", sentence: "The sunset was absolutely ________." },
+{ term: "Summer 2",  week: 3, word: "various", sentence: "We tried ________ flavours of ice cream." },
+{ term: "Summer 2",  week: 3, word: "furious", sentence: "She was ________ when she saw the mess." },
+{ term: "Summer 2",  week: 3, word: "glorious", sentence: "It was a ________ summer’s day." },
+{ term: "Summer 2",  week: 3, word: "victorious", sentence: "The team emerged ________ after a tough match." },
+{ term: "Summer 2",  week: 3, word: "mysterious", sentence: "There was a ________ noise coming from the attic." },
+{ term: "Summer 2",  week: 3, word: "humorous", sentence: "He told a very ________ story at dinner." },
+{ term: "Summer 2",  week: 3, word: "glamorous", sentence: "She looked ________ on the red carpet." },
+{ term: "Summer 2",  week: 3, word: "vigorous", sentence: "He began a ________ workout routine." },
+{ term: "Summer 2",  week: 3, word: "odorous", sentence: "The bin was full of ________ rubbish." },
+{ term: "Summer 2",  week: 3, word: "rigorous", sentence: "The course has a ________ assessment process." },
+{ term: "Summer 2",  week: 4, word: "famous", sentence: "She’s a ________ author known worldwide." },
+{ term: "Summer 2",  week: 4, word: "nervous", sentence: "I’m feeling ________ before my interview." },
+{ term: "Summer 2",  week: 4, word: "ridiculous", sentence: "That’s a ________ idea, it’ll never work." },
+{ term: "Summer 2",  week: 4, word: "carnivorous", sentence: "Lions are ________ animals." },
+{ term: "Summer 2",  week: 4, word: "herbivorous", sentence: "Rabbits are ________ and eat only plants." },
+{ term: "Summer 2",  week: 4, word: "porous", sentence: "The sponge is very ________ and absorbs water quickly." },
+{ term: "Summer 2",  week: 4, word: "adventurous", sentence: "He’s an ________ traveller who’s visited every continent." },
+{ term: "Summer 2",  week: 4, word: "courageous", sentence: "The firefighter was incredibly ________." },
+{ term: "Summer 2",  week: 4, word: "outrageous", sentence: "That’s an ________ price for a sandwich." },
+{ term: "Summer 2",  week: 4, word: "advantageous", sentence: "It’s ________ to learn a second language." },
+{ term: "Summer 2",  week: 5, word: "regularly", sentence: "I go to the gym ________ to stay fit." },
+{ term: "Summer 2",  week: 5, word: "occasionally", sentence: "We ________ visit our cousins in Scotland." },
+{ term: "Summer 2",  week: 5, word: "frequently", sentence: "She ________ checks her emails." },
+{ term: "Summer 2",  week: 5, word: "usually", sentence: "I ________ have tea at this time." },
+{ term: "Summer 2",  week: 5, word: "rarely", sentence: "He ________ eats sweets." },
+{ term: "Summer 2",  week: 5, word: "perhaps", sentence: "________ we should try a different approach." },
+{ term: "Summer 2",  week: 5, word: "maybe", sentence: "________ it’ll stop raining soon." },
+{ term: "Summer 2",  week: 5, word: "certainly", sentence: "I’ll ________ be there on time." },
+{ term: "Summer 2",  week: 5, word: "possibly", sentence: "We could ________ go to the beach tomorrow." },
+{ term: "Summer 2",  week: 5, word: "probably", sentence: "He’ll ________ be late again." },
+{ term: "Summer 2",  week: 6, word: "awkwardly", sentence: "She ________ stumbled into the room." },
+{ term: "Summer 2",  week: 6, word: "frantically", sentence: "He searched ________ for his keys." },
+{ term: "Summer 2",  week: 6, word: "curiously", sentence: "The cat looked ________ at the box." },
+{ term: "Summer 2",  week: 6, word: "obediently", sentence: "The dog sat ________ when told." },
+{ term: "Summer 2",  week: 6, word: "carefully", sentence: "Please handle the glass ________." },
+{ term: "Summer 2",  week: 6, word: "rapidly", sentence: "The train moved ________ through the countryside." },
+{ term: "Summer 2",  week: 6, word: "unexpectedly", sentence: "He arrived ________ at the party." },
+{ term: "Summer 2",  week: 6, word: "deliberately", sentence: "She ________ ignored the warning signs." },
+{ term: "Summer 2",  week: 6, word: "hurriedly", sentence: "They packed their bags ________ and left." },
+{ term: "Summer 2",  week: 6, word: "reluctantly", sentence: "He ________ agreed to help." },
+
 
 ];
 
+let selectedTerm = 1;
 let selectedWeek = 1;
 let isReviewMode = false;
 let words = [];
@@ -202,15 +502,15 @@ let incorrectWords = [];
 let attemptHistory = [];
 let typedWord = "";
 
-function getRandomWords(array, count) {
-  const shuffled = [...array].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count).map(w => ({ ...w }));
-}
-
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-GB";
   speechSynthesis.speak(utterance);
+}
+
+function getRandomWords(array, count) {
+  const shuffled = [...array].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count).map(w => ({ ...w }));
 }
 
 function loadQuestion() {
@@ -226,13 +526,10 @@ function loadQuestion() {
 function updateSentence() {
   const correctWord = words[current].word;
   let displayWord = "";
-
   for (let i = 0; i < correctWord.length; i++) {
     displayWord += typedWord[i] ? typedWord[i] : "_";
   }
-
-  const baseSentence = words[current].sentence;
-  const updated = baseSentence.replace("________", displayWord);
+  const updated = words[current].sentence.replace("________", displayWord);
   document.getElementById("sentenceDisplay").textContent = updated;
 }
 
@@ -248,8 +545,7 @@ function updateTypedDisplay() {
 function renderKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-
-  const rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+  const rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM","-'"];
   rows.forEach(row => {
     const rowDiv = document.createElement("div");
     rowDiv.className = "keyboard-row";
@@ -339,24 +635,56 @@ function showSummary() {
   document.getElementById("score").textContent = "";
   document.getElementById("summary").innerHTML = summaryText;
 
-  const retryable = selectedWeek === "review"
-    ? incorrectWords.length > 0
-    : incorrectWords.some(w => w.week === selectedWeek);
-
+  const retryable = isReviewMode && incorrectWords.some(w => w.term === selectedTerm);
   if (retryable) {
     document.getElementById("retryButton").style.display = "block";
   }
 }
 
+function startRetry() {
+  words = getRandomWords(
+    incorrectWords.filter(w => w.term === selectedTerm),
+    Math.min(10, incorrectWords.length)
+  );
+  incorrectWords = [];
+  current = 0;
+  score = 0;
+  typedWord = "";
+  document.querySelector(".controls").style.display = "block";
+  document.getElementById("retryButton").style.display = "none";
+  document.getElementById("summary").innerHTML = "";
+  document.getElementById("score").textContent = "Score: 0";
+  loadQuestion();
+}
 
-function selectWeek() {
-  const selected = document.getElementById("weekSelect").value;
-  isReviewMode = selected === "review";
-  selectedWeek = isReviewMode ? null : parseInt(selected);
+function populateSelectors() {
+  const termSelect = document.getElementById("termSelect");
+  const terms = [...new Set(allWords.map(w => w.term))].sort((a, b) => a - b);
+  termSelect.innerHTML = terms.map(t => `<option value="${t}">Term ${t}</option>`).join("");
+  updateWeekOptions(terms[0]);
+}
+
+function updateWeekOptions(term) {
+  const weekSelect = document.getElementById("weekSelect");
+  const weeks = [...new Set(allWords.filter(w => w.term === term).map(w => w.week))].sort((a, b) => a - b);
+  weekSelect.innerHTML = weeks.map(w => `<option value="${w}">Week ${w}</option>`).join("") +
+                         `<option value="review">Review Week</option>`;
+}
+
+function onTermChange() {
+  selectedTerm = document.getElementById("termSelect").value;
+  updateWeekOptions(selectedTerm);
+  selectTermAndWeek();
+}
+
+function selectTermAndWeek() {
+  const weekValue = document.getElementById("weekSelect").value;
+  isReviewMode = weekValue === "review";
+  selectedWeek = isReviewMode ? null : parseInt(weekValue);
 
   words = isReviewMode
-    ? getRandomWords(allWords, 10)
-    : allWords.filter(w => w.week === selectedWeek).map(w => ({ ...w }));
+    ? getRandomWords(allWords.filter(w => w.term === selectedTerm), 10)
+    : allWords.filter(w => w.term === selectedTerm && w.week === selectedWeek).map(w => ({ ...w }));
 
   current = 0;
   score = 0;
@@ -371,28 +699,13 @@ function selectWeek() {
   loadQuestion();
 }
 
-
-function startRetry() {
-  words = isReviewMode
-    ? getRandomWords(incorrectWords, Math.min(10, incorrectWords.length))
-    : incorrectWords.filter(w => w.week === selectedWeek).map(w => ({ ...w }));
-
-  incorrectWords = [];
-  current = 0;
-  score = 0;
-  typedWord = "";
-  document.querySelector(".controls").style.display = "block";
-  document.getElementById("retryButton").style.display = "none";
-  document.getElementById("summary").innerHTML = "";
-  document.getElementById("score").textContent = "Score: 0";
-  loadQuestion();
-}
-
-
 window.onload = () => {
-  document.getElementById("weekSelect").value = "1";
-  selectWeek();
+  populateSelectors();
+  const firstTerm = [...new Set(allWords.map(w => w.term))][0];
+  document.getElementById("termSelect").value = firstTerm;
+  onTermChange();
 };
+
 
 document.addEventListener("keydown", (event) => {
   const key = event.key.toUpperCase();
@@ -407,9 +720,8 @@ document.addEventListener("keydown", (event) => {
     checkAnswer();
   }
 });
+
 </script>
 
 </body>
 </html>
-
-
