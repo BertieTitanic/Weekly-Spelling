@@ -577,6 +577,7 @@ function backspace() {
 }
 
 function checkAnswer() {
+  if (!typedWord || typedWord.trim().length === 0) return;
   const correct = words[current].word.toLowerCase();
   if (typedWord === correct) {
     score++;
@@ -727,3 +728,4 @@ document.addEventListener("keydown", (event) => {
 
 </body>
 </html>
+
