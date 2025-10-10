@@ -108,6 +108,7 @@
 <div class="feedback" id="feedback"></div>
 <div class="score" id="score">Score: 0</div>
 <button id="retryButton" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
+
 <div class="summary" id="summary"></div>
 
 <div id="correctReview" style="display:none; text-align:center; margin-top:20px;">
@@ -491,7 +492,6 @@ const allWords = [
 
 
 
-
 ];
 
 let selectedTerm = 1;
@@ -645,10 +645,15 @@ function showSummary() {
 }
 
 function startRetry() {
-  words = getRandomWords(
-    incorrectWords.filter(w => w.term === selectedTerm),
-    Math.min(10, incorrectWords.length)
+  const uniqueIncorrect = Array.from(
+    new Map(
+      incorrectWords
+        .filter(w => w.term === selectedTerm)
+        .map(w => [w.word, w])
+    ).values()
   );
+
+  words = getRandomWords(uniqueIncorrect, Math.min(10, uniqueIncorrect.length));
   incorrectWords = [];
   current = 0;
   score = 0;
@@ -660,9 +665,10 @@ function startRetry() {
   loadQuestion();
 }
 
+
 function populateSelectors() {
   const termSelect = document.getElementById("termSelect");
-  const terms = [...new Set(allWords.map(w => w.term))].sort((a, b) => a - b);
+  const terms = [...new Set(allWords.map(w => w.term))].sort((a, b) => a.localeCompare(b));
   termSelect.innerHTML = terms.map(t => `<option value="${t}">Term ${t}</option>`).join("");
   updateWeekOptions(terms[0]);
 }
@@ -728,4 +734,5 @@ document.addEventListener("keydown", (event) => {
 
 </body>
 </html>
+
 
