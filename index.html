@@ -21,6 +21,11 @@
       text-align: center;
       margin: 10px 0;
     }
+    .retry-button {
+     display: block;
+     margin: 10px auto; /* auto centers horizontally */
+     }
+
     .typed-word {
       font-size: 1.4em;
       letter-spacing: 2px;
@@ -101,13 +106,13 @@
 <div class="keyboard" id="keyboard"></div>
 
 <div class="controls">
-  <button onclick="checkAnswer()">Check Answer</button>
+  <button id="checkButton" onclick="checkAnswer()">Check Answer</button>
   <button onclick="backspace()">Backspace</button>
 </div>
 
 <div class="feedback" id="feedback"></div>
 <div class="score" id="score">Score: 0</div>
-<button id="retryButton" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
+<button id="retryButton" class="retry-button" style="display:none;" onclick="startRetry()">Retry Incorrect Words</button>
 
 <div class="summary" id="summary"></div>
 
@@ -516,6 +521,7 @@ function getRandomWords(array, count) {
 }
 
 function loadQuestion() {
+  
   typedWord = "";
   document.getElementById("feedback").textContent = "";
   updateSentence();
@@ -523,7 +529,10 @@ function loadQuestion() {
   renderKeyboard();
   const fullSentence = words[current].sentence.replace("________", words[current].word);
   speak(fullSentence);
+  document.getElementById("checkButton").disabled = false;
+
 }
+
 
 function updateSentence() {
   const correctWord = words[current].word;
@@ -579,6 +588,8 @@ function backspace() {
 function checkAnswer() {
   if (!typedWord || typedWord.trim().length === 0) return;
   const correct = words[current].word.toLowerCase();
+  document.getElementById("checkButton").disabled = true;
+
   if (typedWord === correct) {
     score++;
     document.getElementById("feedback").textContent = "✅ Correct!";
@@ -726,7 +737,11 @@ document.addEventListener("keydown", (event) => {
   } else if (event.key === "Backspace") {
     backspace();
   } else if (event.key === "Enter") {
-    checkAnswer();
+    const checkBtn = document.getElementById("checkButton");
+    if (!checkBtn.disabled) {
+      checkAnswer();
+    }
+   
   }
 });
 
