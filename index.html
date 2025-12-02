@@ -45,21 +45,26 @@
       max-width: 100%;
     }
     .keyboard-row button {
-      padding: 12px;
+	flex: 1 1 auto;       
+	min-width: 28px;      
+	max-width: 42px;       
+	padding: 12px;
       font-size: 1.1em;
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: 42px;
+      
     }
     .keyboard-row button:hover {
       background: #005fa3;
     }
     @media (max-width: 500px) {
       .keyboard-row button {
-        width: 32px;
+        flex: 1 1 auto;
+    	min-width: 24px;
+    	max-width: 32px;
         font-size: 1em;
         padding: 10px;
       }
@@ -748,6 +753,5 @@ document.addEventListener("keydown", (event) => {
 
 </body>
 </html>
-
 
 
