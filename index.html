@@ -5,136 +5,89 @@
   <title>Spelling Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  padding: 20px;
-  margin: 0;
-  background: #f0f4f8;
-  color: #333;
-}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #f0f4f8;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    .sentence, .typed-word, .feedback, .score, .summary {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .retry-button {
+     display: block;
+     margin: 10px auto; /* auto centers horizontally */
+     }
 
-html, body {
-  -webkit-text-size-adjust: none;
-  text-size-adjust: none;
-}
-
-h1 {
-  text-align: center;
-  font-size: 1.5em;
-  margin-bottom: 20px;
-}
-
-.sentence, .typed-word, .feedback, .score, .summary {
-  text-align: center;
-  margin: 10px 0;
-}
-
-.retry-button {
-  display: block;
-  margin: 10px auto; /* auto centers horizontally */
-}
-
-.typed-word {
-  font-size: 1.4em;
-  letter-spacing: 2px;
-}
-
-.keyboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.keyboard-row {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  max-width: 100%;
-}
-
-.keyboard-row button {
-  padding: 12px;
-  font-size: 1.1em;
-  background: #0078D4;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 42px; /* desktop fixed width */
-}
-
-.keyboard-row button:hover {
-  background: #005fa3;
-}
-
-@media (max-width: 500px) {
-  .keyboard-row {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .keyboard-row.ten button {
-    flex: 1 1 calc((100vw - (9 * 6px)) / 10);
-  }
-  .keyboard-row.nine button {
-    flex: 1 1 calc((100vw - (8 * 6px)) / 9);
-  }
-  .keyboard-row.seven button {
-    flex: 1 1 calc((100vw - (6 * 6px)) / 7);
-  }
-  .keyboard-row.two button {
-    flex: 1 1 calc((100vw - (1 * 6px)) / 2);
-  }
-
-  .keyboard-row button {
-    font-size: 16px;
-    line-height: 1;
-    padding: 10px;
-    white-space: nowrap;
-  }
-}
-
-
-
-
-
-
-
-
-.controls button {
-  padding: 12px;
-  font-size: 1em;
-  background: #0078D4;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-top: 10px;
-  width: 100%;
-}
-
-.correct-word {
-  color: green;
-  font-weight: bold;
-  font-size: 2em;
-  display: block;
-  margin-top: 10px;
-}
-
-.incorrect-word {
-  color: red;
-  text-decoration: line-through;
-  font-size: 2em;
-  display: block;
-}
-
+    .typed-word {
+      font-size: 1.4em;
+      letter-spacing: 2px;
+    }
+    .keyboard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+    .keyboard-row button {
+      padding: 12px;
+      font-size: 1.1em;
+      background: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 42px;
+    }
+    .keyboard-row button:hover {
+      background: #005fa3;
+    }
+    @media (max-width: 500px) {
+      .keyboard-row button {
+        width: 32px;
+        font-size: 1em;
+        padding: 10px;
+      }
+    }
+    .controls button {
+      padding: 12px;
+      font-size: 1em;
+      background: #0078D4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .correct-word {
+      color: green;
+      font-weight: bold;
+      font-size: 2em;
+      display: block;
+      margin-top: 10px;
+    }
+    .incorrect-word {
+      color: red;
+      text-decoration: line-through;
+      font-size: 2em;
+      display: block;
+    }
   </style>
-
 </head>
 <body>
 
@@ -256,7 +209,7 @@ const allWords = [
 { term: "Autumn 2",  week: 2, word: "profession", sentence: "Teaching is a noble ________." },
 { term: "Autumn 2",  week: 2, word: "depression", sentence: "He struggled with ________ for years." },
 { term: "Autumn 2",  week: 2, word: "impression", sentence: "She made a great ________ at the interview." },
-{ term: "Autumn 2",  week: 3, word: "definite", sentence: "There’s no ________ answer to that question." },
+
 { term: "Autumn 2",  week: 3, word: "invention", sentence: "The new ________ changed the way we live." },
 { term: "Autumn 2",  week: 3, word: "injection", sentence: "He winced at the ________ in his arm." },
 { term: "Autumn 2",  week: 3, word: "action", sentence: "We must take immediate ________ to fix this." },
@@ -603,28 +556,19 @@ function updateTypedDisplay() {
 function renderKeyboard() {
   const keyboard = document.getElementById("keyboard");
   keyboard.innerHTML = "";
-  const rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM", "-'"];
+  const rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM","-'"];
   rows.forEach(row => {
     const rowDiv = document.createElement("div");
     rowDiv.className = "keyboard-row";
-
-    if (row.length === 10) rowDiv.classList.add("ten");
-    if (row.length === 9)  rowDiv.classList.add("nine");
-    if (row.length === 7)  rowDiv.classList.add("seven");
-    if (row.length === 2)  rowDiv.classList.add("two");
-
     row.split("").forEach(letter => {
       const btn = document.createElement("button");
       btn.textContent = letter;
       btn.onclick = () => typeLetter(letter.toLowerCase());
       rowDiv.appendChild(btn);
     });
-
     keyboard.appendChild(rowDiv);
   });
 }
-
-
 
 function typeLetter(letter) {
   const correctWord = words[current].word;
