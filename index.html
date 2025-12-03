@@ -75,23 +75,23 @@ h1 {
     display: grid;
     width: 100%;
     box-sizing: border-box;
-    gap: 6px; /* keep visible gaps */
+    gap: 6px;
   }
 
   /* Row length variants */
-  .keyboard-row.ten   { grid-template-columns: repeat(10, 1fr); }
-  .keyboard-row.nine  { grid-template-columns: repeat(9, 1fr); }
-  .keyboard-row.seven { grid-template-columns: repeat(7, 1fr); }
-  .keyboard-row.two   { grid-template-columns: repeat(2, 1fr); }
+  .keyboard-row.ten   { grid-template-columns: repeat(10, calc((100% - (9 * 6px)) / 10)); }
+  .keyboard-row.nine  { grid-template-columns: repeat(9,  calc((100% - (8 * 6px)) / 9)); }
+  .keyboard-row.seven { grid-template-columns: repeat(7,  calc((100% - (6 * 6px)) / 7)); }
+  .keyboard-row.two   { grid-template-columns: repeat(2,  calc((100% - (1 * 6px)) / 2)); }
 
   .keyboard-row button {
     font-size: 16px;
     line-height: 1;
     padding: 10px;
     white-space: nowrap;
-    justify-self: stretch; /* ensures each button fills its grid cell */
   }
 }
+
 
 
 
