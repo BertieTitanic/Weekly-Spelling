@@ -596,7 +596,6 @@ function renderKeyboard() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "keyboard-row";
 
-    // add a class based on row length for mobile grid
     if (row.length === 10) rowDiv.classList.add("ten");
     if (row.length === 9)  rowDiv.classList.add("nine");
     if (row.length === 7)  rowDiv.classList.add("seven");
@@ -612,6 +611,7 @@ function renderKeyboard() {
     keyboard.appendChild(rowDiv);
   });
 }
+
 
 
 function typeLetter(letter) {
