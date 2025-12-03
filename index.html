@@ -41,39 +41,30 @@
       display: flex;
       justify-content: center;
       gap: 6px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       max-width: 100%;
     }
     .keyboard-row button {
-	
-	flex: 0 0 auto;       
-	min-width: 28px;      
-	max-width: 42px;       
-	padding: 12px;
+      padding: 12px;
       font-size: 1.1em;
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      
+      width: 42px;
     }
     .keyboard-row button:hover {
       background: #005fa3;
     }
-@media (max-width: 500px) {
-  .keyboard-row {
-    justify-content: space-between;
-  }
-  .keyboard-row button {
-    flex: 1 1 auto;
-    width: calc(100% / 10 - 4px); /* adjust per row length */
-    min-width: 24px;
-    max-width: none;              /* let them flex evenly */
-    font-size: clamp(0.8em, 3vw, 1em);
-    padding: 0.5em;
-  }
-}
+    @media (max-width: 500px) {
+      .keyboard-row button {
+        width: 32px;
+        font-size: 1em;
+        text-size-adjust: none
+	padding: 10px;
+      }
+    }
     .controls button {
       padding: 12px;
       font-size: 1em;
@@ -758,11 +749,5 @@ document.addEventListener("keydown", (event) => {
 
 </body>
 </html>
-
-
-
-
-
-
 
 
