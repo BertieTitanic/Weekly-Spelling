@@ -41,30 +41,36 @@
       display: flex;
       justify-content: center;
       gap: 6px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       max-width: 100%;
     }
     .keyboard-row button {
       padding: 12px;
-      font-size: 1.1em;
+      font-size: 16px;
+      line-height: 1;  
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       width: 42px;
+      white-space: nowrap;
+      -webkit-text-size-adjust: none; 
+      text-size-adjust: none;
     }
     .keyboard-row button:hover {
       background: #005fa3;
     }
-    @media (max-width: 500px) {
-      .keyboard-row button {
-        width: 32px;
-        font-size: 1em;
-        text-size-adjust: none
-	padding: 10px;
-      }
-    }
+@media (max-width: 500px) {
+  .keyboard-row {
+    justify-content: space-between;   /* fill width evenly */
+  }
+  .keyboard-row button {
+    width: 32px;
+    font-size: 14px;                  /* fixed px */
+    padding: 10px;
+  }
+}
     .controls button {
       padding: 12px;
       font-size: 1em;
@@ -91,6 +97,8 @@
   </style>
 </head>
 <body>
+	-webkit-text-size-adjust: none; /* iOS Safari */
+  	text-size-adjust: none;         /* Other browsers */
 
 <h1>Spelling Challenge</h1>
 
