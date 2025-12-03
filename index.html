@@ -58,12 +58,24 @@
       background: #005fa3;
     }
     @media (max-width: 500px) {
-      .keyboard-row button {
-        width: 32px;
-        font-size: 1em;
-        padding: 10px;
-      }
-    }
+  .keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .keyboard-row button {
+    flex: 1;                /* share space evenly */
+    min-width: 32px;        /* never shrink below this */
+    font-size: 16px;        /* fixed px for consistency */
+    line-height: 1;
+    padding: 10px;
+    white-space: nowrap;
+  }
+}
+
     .controls button {
       padding: 12px;
       font-size: 1em;
@@ -749,5 +761,6 @@ document.addEventListener("keydown", (event) => {
 
 </body>
 </html>
+
 
 
