@@ -12,6 +12,11 @@
       background: #f0f4f8;
       color: #333;
     }
+     html, body {
+         -webkit-text-size-adjust: none;
+          text-size-adjust: none;
+      }    
+
     h1 {
       text-align: center;
       font-size: 1.5em;
@@ -41,36 +46,42 @@
       display: flex;
       justify-content: center;
       gap: 6px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       max-width: 100%;
     }
     .keyboard-row button {
       padding: 12px;
-      font-size: 16px;
-      line-height: 1;  
+      font-size: 1.1em;
       background: #0078D4;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       width: 42px;
-      white-space: nowrap;
-      -webkit-text-size-adjust: none; 
-      text-size-adjust: none;
     }
     .keyboard-row button:hover {
       background: #005fa3;
     }
-@media (max-width: 500px) {
-  .keyboard-row {
-    justify-content: space-between;   /* fill width evenly */
-  }
-  .keyboard-row button {
-    width: 32px;
-    font-size: 14px;                  /* fixed px */
-    padding: 10px;
-  }
+    @media (max-width: 500px) {
+      .keyboard-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* adjust per row */
+  gap: 6px;
+  width: 100%;
 }
+
+.keyboard-row button {
+  width: 100%;       /* fills its grid cell */
+  font-size: 16px;   /* fixed px, not em/rem */
+  line-height: 1;
+  padding: 10px;
+  white-space: nowrap;
+  background: #0078D4;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+    }
     .controls button {
       padding: 12px;
       font-size: 1em;
@@ -95,10 +106,9 @@
       display: block;
     }
   </style>
+
 </head>
 <body>
-	-webkit-text-size-adjust: none; /* iOS Safari */
-  	text-size-adjust: none;         /* Other browsers */
 
 <h1>Spelling Challenge</h1>
 
@@ -218,6 +228,7 @@ const allWords = [
 { term: "Autumn 2",  week: 2, word: "profession", sentence: "Teaching is a noble ________." },
 { term: "Autumn 2",  week: 2, word: "depression", sentence: "He struggled with ________ for years." },
 { term: "Autumn 2",  week: 2, word: "impression", sentence: "She made a great ________ at the interview." },
+{ term: "Autumn 2",  week: 3, word: "definite", sentence: "There’s no ________ answer to that question." },
 { term: "Autumn 2",  week: 3, word: "invention", sentence: "The new ________ changed the way we live." },
 { term: "Autumn 2",  week: 3, word: "injection", sentence: "He winced at the ________ in his arm." },
 { term: "Autumn 2",  week: 3, word: "action", sentence: "We must take immediate ________ to fix this." },
